@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>jQuery Autotab Demo</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+        <script src="js/jquery.autotab.js"></script>
+        <script>
+        $(function () {
+            $('input[type=text]').autotab();
+            $('.number').autotab('filter', 'number');
+            $('.text').autotab('filter', 'text');
+            $('.alpha').autotab('filter', 'alpha');
+            $('.alphanumeric').autotab('filter', { format: 'alphanumeric', uppercase: true });
+            $('#regex').autotab({ format: 'custom', pattern: '[^0-9\.]' });
+        });
+        </script>
+
+        <style>
+        body {
+            background-color: #f7f7f9;
+            color: #333;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 20px;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #fff;
+        }
+        article {
+            background-color: #fff;
+            border: 1px solid #e1e1e8;
+            border-radius: 10px;
+            box-sizing: border-box;
+            margin: auto;
+            padding: 20px;
+            width: 800px;
+        }
+        pre,
+        code {
+            background-color: #f7f7f9;
+            border: 1px solid #e1e1e8;
+            border-radius: 5px;
+            padding: 2px 4px;
+            white-space: pre-line;
+            word-wrap: break-word;
+        }
+        code {
+            display: inline-block;
+        }
+        .example {
+        }
+        .example label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        </style>
+    </head>
+
+    <body>
+        <article>
+            <h1>jQuery Autotab Demo</h1>
+            <p>Autotab's documentation can be found in <a href="https://github.com/Mathachew/jquery-autotab/blob/master/README.md">ReadMe.md</a> on GitHub.</p>
+
+            <hr />
+
+            <section>
+                <div class="example">
+                    <label for="number1">Phone Number</label>
+
+                    <input type="text" id="number1" class="number" maxlength="3" size="3" />
+                    -
+                    <input type="text" id="number2" class="number" maxlength="3" size="3" />
+                    -
+                    <input type="text" id="number3" class="number" maxlength="4" size="5" />
+                </div>
+                <pre>
+                    // Example 1
+                    $('input[type=text]').autotab();
+                    $('.number').autotab('filter', 'number');
+
+                    // Example 2
+                    $('.number').autotab();
+                    $('.number').autotab('filter', 'number');
+
+                    // Example 3
+                    $('#number1').autotab({ format: 'number', target: '#number2' });
+                    $('#number2').autotab({ format: 'number', target: '#number3', previous: '#number1' });
+                    $('#number3').autotab({ format: 'number', target: '#ssn1', previous: '#number2' });
+
+                    // Example 4
+                    // Note: Applies number formatting to all elements, but the last element lacks a target
+                    $('.number').autotab({ format: 'number' });
+                    $('#number3').autotab({ target: '#ssn1' });
+                </pre>
+            </section>
+
+            <section>
+                <p>Examples from this point on will assume <code>$('input[type=text]').autotab()</code> is called.</p>
+            </section>
+
+            <hr />
+
+            <section>
+                <div class="example">
+                    <label for="ssn1">Social Security Number</label>
+
+                    <input type="text" id="ssn1" class="ssn" maxlength="3" size="3" />
+                    -
+                    <input type="text" id="ssn2" class="ssn" maxlength="2" size="3" />
+                    -
+                    <input type="text" id="ssn3" class="ssn" maxlength="4" size="5" />
+                </div>
+                <pre>
+                    $('.ssn').autotab('filter', 'number');
+                </pre>
+            </section>
+
+            <hr />
+
+            <section>
+                <div class="example">
+                    <label for="text1">Text characters only</label>
+
+                    <input type="text" id="text1" class="text" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="text2" class="text" maxlength="4" size="4" />
+                    -
+                    <input type="text" id="text3" class="text" maxlength="5" size="4" />
+                </div>
+                <pre>
+                    $('.text').autotab('filter', 'text');
+                </pre>
+            </section>
+
+            <hr />
+
+            <section>
+                <div class="example">
+                    <label for="alpha1">Alpha only</label>
+
+                    <input type="text" id="alpha1" class="alpha" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="alpha2" class="alpha" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="alpha3" class="alpha" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="alpha4" class="alpha" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="alpha5" class="alpha" maxlength="5" size="4" />
+                </div>
+                <pre>
+                    $('.alpha').autotab('filter', 'alpha');
+                </pre>
+            </section>
+
+            <hr />
+
+            <section>
+                <div class="example">
+                    <label for="alphanumeric1">Uppercase letters and numbers</label>
+
+                    <input type="text" id="alphanumeric1" class="alphanumeric" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="alphanumeric2" class="alphanumeric" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="alphanumeric3" class="alphanumeric" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="alphanumeric4" class="alphanumeric" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="alphanumeric5" class="alphanumeric" maxlength="5" size="4" />
+                </div>
+                <pre>
+                    $('.alphanumeric').autotab('filter', 'alphanumeric');
+                </pre>
+            </section>
+
+            <hr />
+
+            <section>
+                <div class="example">
+                    <label for="all1">Any and all characters</label>
+
+                    <input type="text" id="all1" class="all" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="all2" class="all" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="all3" class="all" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="all4" class="all" maxlength="5" size="4" />
+                    -
+                    <input type="text" id="all5" class="all" maxlength="5" size="4" />
+                </div>
+                <pre>
+                    // Note: This call is not necessary as 'all' is the default format
+                    $('.all').autotab('filter', 'all');
+                </pre>
+            </section>
+
+            <hr />
+
+            <section>
+                <div class="example">
+                    <label for="regex">Regular Expression (Allows numbers and periods)</label>
+                    <input type="text" id="regex" maxlength="15" size="13" />
+                </div>
+                <pre>
+                    $('#regex').autotab({ format: 'custom', pattern: '[^0-9\.]' });
+                </pre>
+            </section>
+        </article>
+    </body>
+</html>

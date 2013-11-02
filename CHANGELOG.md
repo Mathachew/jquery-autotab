@@ -1,0 +1,39 @@
+## 1.2 (2013-11-02)
+
+Features:
+
+* updated `autotab()` to be the primary means of setting up auto tabbing and filtering (see documentation for more details)
+* greatly improved filtering by preventing illegal characters from appearing by changing `keyup` to `keypress`
+* improved functionality when making multiple calls for auto tab and/or filtering that prevents multiple triggers of the auto tabbing and filtering from occuring
+* added `$.autotab.next()` and `$.autotab.previous()`, which can be used to manually trigger the `autotab-next` and `autotab-previous` events respectively
+* added support to prevent double tabbing using a timer, ie. pressing tab immediately after auto tabbing has occurred
+* added basic support for pasting
+* improved auto tabbing by moving to the next element when the current one reaches its maxlength while holding down a key
+* auto tabbing forward will select the target element's value (#1)
+* while auto tabbing does not work on iOS devices, the behavior of the script has improved, including input validation
+* fully backwards compatible with Autotab 1.1b
+
+Bug fixes:
+
+* if rapidly typing illegal characters, the next element received focused despite the previous element not reaching it's maxlength
+* addressed sevearl behavioral issues in some of the latest versions of Firefox
+
+
+## 1.1b (2008-09-10)
+
+Features:
+
+* refactored auto tabbing and filtering functionality so that one or the other could be applied
+* added `autotab_magic()`, simplifying the setup of `target` and `previous` elements
+* added `custom` format option, which requires a regular expression to be passed in the `pattern` field
+* updated `format` to support functions
+
+Bug fixes:
+
+* in Safari, pressing backspace in an empty text box would not focus on the `previous` element
+* in IE, pressing the left arrow key would force the cursor to the end of the field's content
+
+
+## 1.0 (2008-05-22)
+
+Initial Release
