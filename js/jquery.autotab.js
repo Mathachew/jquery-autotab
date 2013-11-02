@@ -202,6 +202,10 @@
         }
 
         return $(element).on('autotab-next', function (event, defaults) {
+            if (!defaults) {
+                defaults = $(this).data('autotab-defaults')
+            }
+
             if (defaults.target.length) {
                 // Using focus on iOS devices is a pain, so use the browser's next/previous buttons to proceed
                 if (!defaults.iOS) {
@@ -210,6 +214,10 @@
                 }
             }
         }).on('autotab-previous', function (event, defaults) {
+            if (!defaults) {
+                defaults = $(this).data('autotab-defaults')
+            }
+
             if (defaults.previous.length) {
                 defaults.previous.focus();
 
