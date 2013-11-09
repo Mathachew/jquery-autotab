@@ -338,47 +338,45 @@ var options = {
 
 ## Filter Formats
 
-Autotab has several filter formats available. If none of the formats meet your needs, Autotab also supports a `custom` option where you can pass either a regular expression or a function.
+Autotab has several filter formats available, all passed into the `format` key. If none of the formats meet your needs, Autotab also supports a passing a function or specifying `custom` option where you can pass a regular expression.
 
 <table width="100%">
   <tr>
-    <td>format: 'all'</td>
+    <td width="25%">all</td>
     <td>Allows any and all characters.</td>
   </tr>
   <tr>
-    <td width="30%">format: 'text'</td>
+    <td>text</td>
     <td>Allows all characters, including special characters, except numbers.</td>
   </tr>
   <tr>
-    <td>format: 'alpha'</td>
+    <td>alpha</td>
     <td>Allows only letters.</td>
   </tr>
   <tr>
-    <td>format: 'number|numeric'</td>
+    <td>number|numeric</td>
     <td valign="top">Allows only numbers.</td>
   </tr>
   <tr>
-    <td>format: 'alphanumeric'</td>
+    <td>alphanumeric</td>
     <td>Allows only letters and numbers.</td>
   </tr>
   <tr>
-    <td>format: 'hex|hexadecimal'</td>
+    <td>hex|hexadecimal</td>
     <td>Allows only letters A-F, a-f and numbers.</td>
   </tr>
   <tr>
     <td>
-      format: 'custom',
-      <br />
-      pattern: string
+      custom
     </td>
     <td>
       Allows a developer to provide a custom regular expression: <code>new RegExp(pattern, 'g');</code>
       <br />
-      <strong>Note</strong>: Requires <code>pattern: <em>string</em></code>, ie: <code>"[^0-9\.]"</code>
+      <strong>Note</strong>: Requires <code>pattern: <em>string</em></code>, ie: <code>pattern: "[^0-9\.]"</code>
     </td>
   </tr>
   <tr>
-    <td valign="top">format: function(value, element)</td>
+    <td valign="top">function(value, element)</td>
     <td>
       Allows a developer to provide a their own function in case a regular expression is insufficient.
       <br />
