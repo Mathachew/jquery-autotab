@@ -64,19 +64,19 @@
     // The 1ms timeouts allow for keypress events to complete in case a
     // custom function or exterior method calls for a manual auto tab
     $.autotab = {
-        next: function (force) {
+        next: function () {
             var e = $(document.activeElement);
 
-            if (force === true || e.length) {
+            if (e.length) {
                 setTimeout(function () {
                     e.trigger('autotab-next');
                 }, 1);
             }
         },
-        previous: function (force) {
+        previous: function () {
             var e = $(document.activeElement);
 
-            if (force === true || e.length) {
+            if (e.length) {
                 setTimeout(function () {
                     e.trigger('autotab-previous');
                 }, 1);

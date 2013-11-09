@@ -26,15 +26,15 @@
                     var newValue = element.value + value;
 
                     if (newValue > 12) {
-                        $.autotab.next(true);
+                        $.autotab.next();
                         return 2;
                     }
                     else if (element.value.length == 0 && value > 1) {
-                        $.autotab.next(true);
+                        $.autotab.next();
                         return value;
                     }
-                    else if (element.value.length == 1 && parsedValue === 0) {
-                        $.autotab.next(true);
+                    else if (element.value.length == 1 && parsedValue === 0 && newValue != 10) {
+                        $.autotab.next();
                         return 1;
                     }
 
@@ -304,15 +304,15 @@ $('#function').autotab(function (value, element) {
     var newValue = element.value + value;
 
     if (newValue &gt; 12) {
-        $.autotab.next(true);
+        $.autotab.next();
         return 2;
     }
     else if (element.value.length == 0 &amp;&amp; value &gt; 1) {
-        $.autotab.next(true);
+        $.autotab.next();
         return value;
     }
-    else if (element.value.length == 1 &amp;&amp; parsedValue === 0) {
-        $.autotab.next(true);
+    else if (element.value.length == 1 &amp;&amp; parsedValue === 0 &amp;&amp; newValue != 10) {
+        $.autotab.next();
         return 1;
     }
 
