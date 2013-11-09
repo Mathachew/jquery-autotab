@@ -415,7 +415,7 @@
             // Firefox doesn't behave properly when trying to backspace or move through
             // a text box with the arrow keys
             if (defaults.firefox == 'true' || defaults.firefox === true) {
-                var keys = '8,9,16,17,18,19,20,27,33,34,35,36,37,38,39,40,45,46,144,145';
+                var keys = '8,9,16,17,18,19,20,27,33,34,35,36,37,38,39,40,45,144,145';
 
                 if (keys.indexOf(keyCode) == -1 && typeof keyCode !== 'undefined') {
                     if (this.value.length == defaults.maxlength) {
