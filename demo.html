@@ -4,16 +4,52 @@
     <head>
         <title>jQuery Autotab Demo</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="js/jquery.autotab.js"></script>
         <script>
         $(function () {
-            $('input[type=text]').autotab();
-            $('.number').autotab('filter', 'number');
-            $('.text').autotab('filter', 'text');
-            $('.alpha').autotab('filter', 'alpha');
-            $('.alphanumeric').autotab('filter', { format: 'alphanumeric', uppercase: true });
-            $('#regex').autotab({ format: 'custom', pattern: '[^0-9\.]' });
+            $('#add-autotab').on('click', function () {
+                $('input[type=text]').autotab();
+                $('.number').autotab('filter', 'number');
+                $('.ssn').autotab('filter', 'number');
+                $('.text').autotab('filter', 'text');
+                $('.alpha').autotab('filter', 'alpha');
+                $('.alphanumeric').autotab('filter', { format: 'alphanumeric', uppercase: true });
+                $('#regex').autotab({ format: 'custom', pattern: '[^0-9\.]', maxlength: 15 });
+                $('#function').autotab(function (value, element) {
+                    var parsedValue = parseInt(value, 10);
+
+                    if (!value || parsedValue != value) {
+                        return '';
+                    }
+
+                    var newValue = element.value + value;
+
+                    if (newValue > 12) {
+                        $.autotab.next(true);
+                        return 2;
+                    }
+                    else if (element.value.length == 0 && value > 1) {
+                        $.autotab.next(true);
+                        return value;
+                    }
+                    else if (element.value.length == 1 && parsedValue === 0) {
+                        $.autotab.next(true);
+                        return 1;
+                    }
+
+                    return value;
+                });
+                $('.hexadecimal').autotab('filter', 'hexadecimal');
+                $('#autotab-status span').removeClass('off').addClass('on').text('On');
+            });
+
+            $('#remove-autotab').on('click', function () {
+                $('input[type=text]').autotab('remove');
+                $('#autotab-status span').removeClass('on').addClass('off').text('Off');
+            });
+
+            $('#add-autotab').click();
         });
         </script>
 
@@ -30,7 +66,7 @@
             border-top: 1px solid #eee;
             border-bottom: 1px solid #fff;
         }
-        article {
+        #container {
             background-color: #fff;
             border: 1px solid #e1e1e8;
             border-radius: 10px;
@@ -45,7 +81,6 @@
             border: 1px solid #e1e1e8;
             border-radius: 5px;
             padding: 2px 4px;
-            white-space: pre-line;
             word-wrap: break-word;
         }
         code {
@@ -58,17 +93,55 @@
             font-weight: bold;
             margin-bottom: 5px;
         }
+        button {
+            background-color: #f3f3f3;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #333;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 14px;
+            margin: 10px 0;
+            outline: none;
+            padding: 6px 12px;
+            position: relative;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        button:hover {
+            background-color: #eee;
+        }
+        button:active {
+            top: 1px;
+        }
+        .on {
+            color: green;
+        }
+        .off {
+            color: red;
+        }
         </style>
     </head>
 
     <body>
-        <article>
+        <div id="container">
             <h1>jQuery Autotab Demo</h1>
             <p>Autotab's documentation can be found in <a href="https://github.com/Mathachew/jquery-autotab/blob/master/README.md">ReadMe.md</a> on GitHub.</p>
 
             <hr />
 
-            <section>
+            <div>
+                <p>Use the buttons below to turn Autotab on or off. Turning Autotab off will remove both auto tabbing and filtering.</p>
+
+                <button id="add-autotab">Turn On</button>
+                <button id="remove-autotab">Turn Off</button>
+                <span id="autotab-status">Autotab status: <span class="on">On</span></span>
+            </div>
+
+            <hr />
+
+            <div>
                 <div class="example">
                     <label for="number1">Phone Number</label>
 
@@ -79,33 +152,33 @@
                     <input type="text" id="number3" class="number" maxlength="4" size="5" />
                 </div>
                 <pre>
-                    // Example 1
-                    $('input[type=text]').autotab();
-                    $('.number').autotab('filter', 'number');
+// Example 1
+$('input[type=text]').autotab();
+$('.number').autotab('filter', 'number');
 
-                    // Example 2
-                    $('.number').autotab();
-                    $('.number').autotab('filter', 'number');
+// Example 2
+$('.number').autotab();
+$('.number').autotab('filter', 'number');
 
-                    // Example 3
-                    $('#number1').autotab({ format: 'number', target: '#number2' });
-                    $('#number2').autotab({ format: 'number', target: '#number3', previous: '#number1' });
-                    $('#number3').autotab({ format: 'number', target: '#ssn1', previous: '#number2' });
+// Example 3
+$('#number1').autotab({ format: 'number', target: '#number2' });
+$('#number2').autotab({ format: 'number', target: '#number3', previous: '#number1' });
+$('#number3').autotab({ format: 'number', target: '#ssn1', previous: '#number2' });
 
-                    // Example 4
-                    // Note: Applies number formatting to all elements, but the last element lacks a target
-                    $('.number').autotab({ format: 'number' });
-                    $('#number3').autotab({ target: '#ssn1' });
-                </pre>
-            </section>
+// Example 4
+// Note: Applies number formatting to all elements, but the last element lacks a target
+$('.number').autotab({ format: 'number' });
+$('#number3').autotab({ target: '#ssn1' });
+</pre>
+            </div>
 
-            <section>
+            <div>
                 <p>Examples from this point on will assume <code>$('input[type=text]').autotab()</code> is called.</p>
-            </section>
+            </div>
 
             <hr />
 
-            <section>
+            <div>
                 <div class="example">
                     <label for="ssn1">Social Security Number</label>
 
@@ -116,13 +189,13 @@
                     <input type="text" id="ssn3" class="ssn" maxlength="4" size="5" />
                 </div>
                 <pre>
-                    $('.ssn').autotab('filter', 'number');
-                </pre>
-            </section>
+$('.ssn').autotab('filter', 'number');
+</pre>
+            </div>
 
             <hr />
 
-            <section>
+            <div>
                 <div class="example">
                     <label for="text1">Text characters only</label>
 
@@ -133,13 +206,13 @@
                     <input type="text" id="text3" class="text" maxlength="5" size="4" />
                 </div>
                 <pre>
-                    $('.text').autotab('filter', 'text');
-                </pre>
-            </section>
+$('.text').autotab('filter', 'text');
+</pre>
+            </div>
 
             <hr />
 
-            <section>
+            <div>
                 <div class="example">
                     <label for="alpha1">Alpha only</label>
 
@@ -154,13 +227,13 @@
                     <input type="text" id="alpha5" class="alpha" maxlength="5" size="4" />
                 </div>
                 <pre>
-                    $('.alpha').autotab('filter', 'alpha');
-                </pre>
-            </section>
+$('.alpha').autotab('filter', 'alpha');
+</pre>
+            </div>
 
             <hr />
 
-            <section>
+            <div>
                 <div class="example">
                     <label for="alphanumeric1">Uppercase letters and numbers</label>
 
@@ -175,13 +248,13 @@
                     <input type="text" id="alphanumeric5" class="alphanumeric" maxlength="5" size="4" />
                 </div>
                 <pre>
-                    $('.alphanumeric').autotab('filter', 'alphanumeric');
-                </pre>
-            </section>
+$('.alphanumeric').autotab('filter', 'alphanumeric');
+</pre>
+            </div>
 
             <hr />
 
-            <section>
+            <div>
                 <div class="example">
                     <label for="all1">Any and all characters</label>
 
@@ -196,22 +269,84 @@
                     <input type="text" id="all5" class="all" maxlength="5" size="4" />
                 </div>
                 <pre>
-                    // Note: This call is not necessary as 'all' is the default format
-                    $('.all').autotab('filter', 'all');
-                </pre>
-            </section>
+// Note: This call is not necessary as 'all' is the default format
+$('.all').autotab('filter', 'all');
+</pre>
+            </div>
 
             <hr />
 
-            <section>
+            <div>
                 <div class="example">
                     <label for="regex">Regular Expression (Allows numbers and periods)</label>
                     <input type="text" id="regex" maxlength="15" size="13" />
                 </div>
                 <pre>
-                    $('#regex').autotab({ format: 'custom', pattern: '[^0-9\.]' });
-                </pre>
-            </section>
+$('#regex').autotab({ format: 'custom', pattern: '[^0-9\.]' });
+</pre>
+            </div>
+
+            <hr />
+
+            <div>
+                <div class="example">
+                    <label for="function">Custom Function (Range of 1-12, even if the second digit is greater than 2)</label>
+                    <input type="text" id="function" maxlength="2" size="3" />
+                </div>
+                <pre>
+$('#function').autotab(function (value, element) {
+    var parsedValue = parseInt(value, 10);
+
+    if (!value || parsedValue != value) {
+        return '';
+    }
+
+    var newValue = element.value + value;
+
+    if (newValue &gt; 12) {
+        $.autotab.next(true);
+        return 2;
+    }
+    else if (element.value.length == 0 &amp;&amp; value &gt; 1) {
+        $.autotab.next(true);
+        return value;
+    }
+    else if (element.value.length == 1 &amp;&amp; parsedValue === 0) {
+        $.autotab.next(true);
+        return 1;
+    }
+
+    return value;
+});
+</pre>
+            </div>
+
+            <hr />
+
+            <div>
+                <div class="example">
+                    <label for="regex">Hexadecimal (Allows numbers, a-f, and A-F)</label>
+
+                    <input type="text" id="hexadecimal1" class="hexadecimal" maxlength="4" size="2" />
+                    :
+                    <input type="text" id="hexadecimal2" class="hexadecimal" maxlength="4" size="2" />
+                    :
+                    <input type="text" id="hexadecimal3" class="hexadecimal" maxlength="4" size="2" />
+                    :
+                    <input type="text" id="hexadecimal4" class="hexadecimal" maxlength="4" size="2" />
+                    :
+                    <input type="text" id="hexadecimal5" class="hexadecimal" maxlength="4" size="2" />
+                    :
+                    <input type="text" id="hexadecimal6" class="hexadecimal" maxlength="4" size="2" />
+                    :
+                    <input type="text" id="hexadecimal7" class="hexadecimal" maxlength="4" size="2" />
+                    :
+                    <input type="text" id="hexadecimal8" class="hexadecimal" maxlength="4" size="2" />
+                </div>
+                <pre>
+$('.hexadecimal').autotab('filter', 'hexadecimal');
+</pre>
+            </div>
         </article>
     </body>
 </html>
