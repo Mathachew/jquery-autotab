@@ -1,3 +1,20 @@
+## 1.3 (2013-11-09)
+
+Features:
+
+* added a 1ms timer to `$.autotab.next()` and `$.autotab.previous()` so that the calls perform as expected when the keypress event is complete
+* added the ability to turn auto tab and filtering on or off at will (#4)
+* added Firefox detection so that code specific to it can run separate from everything else
+* improved support for using a function as the format
+* refactored how Autotab's settings are stored as the previous method caused issues with turning it off and on again
+* added support for hexadecimal filtering
+
+Bug fixes:
+
+* if a selector has no matches, but `.autotab()` is still called, an error would occur
+* if allowing periods in a text box, Firefox would display two periods when only one was typed
+
+
 ## 1.2 (2013-11-02)
 
 Features:
