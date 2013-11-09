@@ -1,6 +1,6 @@
 /**
- * Autotab - jQuery plugin 1.2
- * http://www.mathachew.com/sandbox/jquery-autotab
+ * Autotab - jQuery plugin 1.3
+ * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2013 Matthew Miller
  * 
@@ -14,67 +14,127 @@
         focusChange: null
     };
 
-    var getDefaults = function () {
-        var platform = navigator.platform;
+    // Native get/setAttribute methods are much faster than $.data, so $.data is used for objects only: http://jsperf.com/dataset-vs-jquery-data/4
+    // When removing then resetting auto tab, storing an object resulted in overwritten values, leading to this implementation
+    var setSettings = function (e, settings) {
+        if (settings === null || typeof settings === 'undefined') {
+            return;
+        }
 
-        return {
-            loaded: false,
-            format: 'all',
-            pattern: null,
-            uppercase: false,
-            lowercase: false,
-            nospace: false,
-            maxlength: 2147483647,
-            target: null,
-            previous: null,
-            iOS: (platform === 'iPad' || platform === 'iPhone' || platform === 'iPod')
-        };
-    };
-
-    $.autotab = function () { };
-
-    $.autotab.next = function () {
-        var e = $(document.activeElement);
-
-        if (e.length) {
-            e.trigger('autotab-next');
+        for (var key in settings) {
+            if (key == 'format' || key == 'target' || key == 'previous') {
+                $(e).data('autotab-' + key, settings[key]);
+            }
+            else {
+                e.setAttribute('data-autotab-' + key, settings[key]);
+            }
         }
     };
 
-    $.autotab.previous = function () {
-        var e = $(document.activeElement);
+    var getSettings = function (e) {
+        var platform = navigator.platform,
+            settings = {
+                loaded: false,
+                disabled: false,
+                pattern: null,
+                uppercase: false,
+                lowercase: false,
+                nospace: false,
+                maxlength: 2147483647
+            };
 
-        if (e.length) {
-            e.trigger('autotab-previous');
+        for (var key in settings) {
+            settings[key] = e.getAttribute('data-autotab-' + key) || settings[key];
+        }
+
+        settings.format = $(e).data('autotab-format') || 'all';
+        settings.target = $(e).data('autotab-target') || settings.target;
+        settings.previous = $(e).data('autotab-previous') || settings.previous;
+        settings.iOS = e.getAttribute('data-autotab-iOS') || (platform === 'iPad' || platform === 'iPhone' || platform === 'iPod');
+        settings.firefox = e.getAttribute('data-autotab-Firefox') || (typeof InstallTrigger !== 'undefined');
+
+        // Save settings on first run
+        if (!settings.loaded) {
+            setSettings(e, settings);
+        }
+
+        return settings;
+    };
+
+    // The 1ms timeouts allow for keypress events to complete in case a
+    // custom function or exterior method calls for a manual auto tab
+    $.autotab = {
+        next: function () {
+            var e = $(document.activeElement);
+
+            if (e.length) {
+                setTimeout(function () {
+                    e.trigger('autotab-next');
+                }, 1);
+            }
+        },
+        previous: function () {
+            var e = $(document.activeElement);
+
+            if (e.length) {
+                setTimeout(function () {
+                    e.trigger('autotab-previous');
+                }, 1);
+            }
         }
     };
 
     $.fn.autotab = function (method, options) {
+        if (!this.length) {
+            return this;
+        }
+
         // Apply filter options
         if (method == 'filter') {
-            if (typeof options == 'string' || typeof options == 'function') {
+            if (typeof options === 'string' || typeof options === 'function') {
                 options = { format: options };
             }
 
             for (var i = 0, length = this.length; i < length; i++) {
-                var defaults = $(this[i]).data('autotab-defaults');
+                var defaults = getSettings(this[i]),
+                    newOptions = options;
 
                 // Retain the established target/previous values as this area is for filtering only
-                options.target = defaults.target;
-                options.previous = defaults.previous;
+                newOptions.target = defaults.target;
+                newOptions.previous = defaults.previous;
 
-                $.extend(defaults, options);
-                $(this[i]).data('autotab-defaults', defaults);
+                $.extend(defaults, newOptions);
+                setSettings(this[i], defaults);
+            }
+        }
+        // Disable auto tab and filtering
+        else if (method == 'remove' || method == 'destroy' || method == 'disable') {
+            for (var i = 0, length = this.length; i < length; i++) {
+                var defaults = getSettings(this[i]);
+
+                defaults.disabled = true;
+
+                setSettings(this[i], defaults);
+            }
+        }
+        // Re-enable auto tab and filtering
+        else if (method == 'restore' || method == 'enable') {
+            for (var i = 0, length = this.length; i < length; i++) {
+                var defaults = getSettings(this[i]);
+
+                defaults.disabled = false;
+
+                setSettings(this[i], defaults);
             }
         }
         else {
-            if (method == null) {
+            if (method === null || typeof method === 'undefined') {
                 options = {};
             }
-            else if (typeof method == 'string') {
+            else if (typeof method === 'string' || typeof method === 'function') {
                 options = { format: method };
             }
-            else if (typeof method == 'object') {
+            else if (typeof method === 'object') {
                 options = method;
             }
 
@@ -102,43 +162,45 @@
                 }
             }
             else {
-                autotabBind(this, options);
+                autotabBind(this[0], options);
             }
         }
 
         return this;
     };
 
-    var filterValue = function (value, defaults) {
-        if (typeof defaults.format == 'function') {
-            return defaults.format(value);
+    var filterValue = function (e, value, defaults) {
+        if (typeof defaults.format === 'function') {
+            return defaults.format(value, e);
         }
+
+        var pattern = null;
 
         switch (defaults.format) {
             case 'text':
-                var pattern = new RegExp('[0-9]+', 'g');
-                value = value.replace(pattern, '');
+                pattern = new RegExp('[0-9]+', 'g');
                 break;
 
             case 'alpha':
-                var pattern = new RegExp('[^a-zA-Z]+', 'g');
-                value = value.replace(pattern, '');
+                pattern = new RegExp('[^a-zA-Z]+', 'g');
                 break;
 
             case 'number':
             case 'numeric':
-                var pattern = new RegExp('[^0-9]+', 'g');
-                value = value.replace(pattern, '');
+                pattern = new RegExp('[^0-9]+', 'g');
                 break;
 
             case 'alphanumeric':
-                var pattern = new RegExp('[^0-9a-zA-Z]+', 'g');
-                value = value.replace(pattern, '');
+                pattern = new RegExp('[^0-9a-zA-Z]+', 'g');
+                break;
+
+            case 'hex':
+            case 'hexadecimal':
+                pattern = new RegExp('[^0-9A-Fa-f]+', 'g');
                 break;
 
             case 'custom':
-                var pattern = new RegExp(defaults.pattern, 'g');
-                value = value.replace(pattern, '');
+                pattern = new RegExp(defaults.pattern, 'g');
                 break;
 
             case 'all':
@@ -146,8 +208,12 @@
                 break;
         }
 
+        if (pattern !== null) {
+            value = value.replace(pattern, '');
+        }
+
         if (defaults.nospace) {
-            var pattern = new RegExp('[ ]+', 'g');
+            pattern = new RegExp('[ ]+', 'g');
             value = value.replace(pattern, '');
         }
 
@@ -163,15 +229,22 @@
     };
 
     var autotabBind = function (element, options) {
-        var defaults = $(element).data('autotab-defaults') || getDefaults();
+        var defaults = getSettings(element);
+
+        if (defaults.disabled == 'true' || defaults.disabled === true) {
+            defaults.disabled = false;
+            defaults.target = null;
+            defaults.previous = null;
+        }
+
         $.extend(defaults, options);
 
         // Sets targets to element based on the name or ID passed if they are not currently objects
-        if (typeof defaults.target == 'string' || !(defaults.target instanceof jQuery)) {
+        if (typeof defaults.target === 'string' || !(defaults.target instanceof jQuery)) {
             defaults.target = $(defaults.target);
         }
 
-        if (typeof defaults.previous == 'string' || !(defaults.previous instanceof jQuery)) {
+        if (typeof defaults.previous === 'string' || !(defaults.previous instanceof jQuery)) {
             defaults.previous = $(defaults.previous);
         }
 
@@ -191,31 +264,38 @@
             defaults.target = null;
         }
 
-        $(element).data('autotab-defaults', defaults);
-
-        if (!$(element).data('autotab-defaults').loaded) {
+        if (!defaults.loaded) {
             defaults.loaded = true;
-            $(element).data('autotab-defaults', defaults);
+            setSettings(element, defaults);
         }
         else {
-            return $(element);
+            setSettings(element, defaults);
+            return;
         }
 
-        return $(element).on('autotab-next', function (event, defaults) {
+        $(element).on('autotab-next', function (event, defaults) {
             if (!defaults) {
-                defaults = $(this).data('autotab-defaults')
+                defaults = getSettings(this);
+            }
+
+            if (defaults.disabled == 'true' || defaults.disabled === true) {
+                return;
             }
 
             if (defaults.target.length) {
                 // Using focus on iOS devices is a pain, so use the browser's next/previous buttons to proceed
-                if (!defaults.iOS) {
+                if (defaults.iOS != 'true' && defaults.iOS !== true) {
                     defaults.target.focus().select();
                     settings.focusChange = new Date();
                 }
             }
         }).on('autotab-previous', function (event, defaults) {
             if (!defaults) {
-                defaults = $(this).data('autotab-defaults')
+                defaults = getSettings(this);
+            }
+
+            if (defaults.disabled == 'true' || defaults.disabled === true) {
+                return;
             }
 
             if (defaults.previous.length) {
@@ -223,7 +303,7 @@
 
                 // When setting value = value, Firefox will not place the cursor at the end of a textbox
                 // when the cursor was last at any point before the final character within the same textbox
-                if (this.setSelectionRange) {
+                if (defaults.firefox) {
                     var length = defaults.previous.val().length;
                     defaults.previous[0].setSelectionRange(length, length);
                 }
@@ -234,15 +314,20 @@
                 settings.focusChange = null;
             }
         }).on('keydown', function (e) {
-            var defaults = $(this).data('autotab-defaults'),
-                keyCode = e.which || e.charCode;
+            var defaults = getSettings(this);
+
+            if (!defaults || defaults.disabled == 'true') {
+                return true;
+            }
+
+            var keyCode = e.which || e.charCode;
 
             // Go to the previous element when backspace
             // is pressed in an empty input field
-            if (keyCode == 8 && this.value.length == 0 && defaults.previous.length) {
+            if (keyCode == 8 && this.value.length === 0 && defaults.previous.length) {
                 $(this).trigger('autotab-previous', defaults);
             }
-            else if (keyCode == 9 && settings.focusChange != null) {
+            else if (keyCode == 9 && settings.focusChange !== null) {
                 // Tab backwards
                 if (e.shiftKey) {
                     settings.focusChange = null;
@@ -258,16 +343,21 @@
                 settings.focusChange = null;
             }
         }).on('keypress', function (e) {
-            var defaults = $(this).data('autotab-defaults'),
-                keyCode = e.which || e.keyCode,
-                keyChar = filterValue(String.fromCharCode(keyCode), defaults),
+            var defaults = getSettings(this);
+
+            if (!defaults || defaults.disabled == 'true' || defaults.disabled === true) {
+                return true;
+            }
+
+            var keyCode = e.which || e.keyCode,
+                keyChar = filterValue(this, String.fromCharCode(keyCode), defaults),
                 hasValue = document.selection && document.selection.createRange ? true : (e.charCode > 0);
 
             if (e.ctrlKey || e.altKey) {
                 return true;
             }
 
-            if (hasValue && (keyChar == null || keyChar == '')) {
+            if (hasValue && (keyChar === null || keyChar === '')) {
                 // Returns true whenever a paste is occurring
                 // Speficially added for Firefox
                 return e.ctrlKey;
@@ -277,13 +367,13 @@
             if (hasValue && (this.value.length <= this.maxLength)) {
                 var start, end;
 
-                if (typeof this.selectionStart == 'number' && typeof this.selectionEnd == 'number') {
+                if (typeof this.selectionStart === 'number' && typeof this.selectionEnd === 'number') {
                     // Non-IE browsers and IE 9
                     start = this.selectionStart;
                     end = this.selectionEnd;
 
                     // Text is fully selected, so it needs to be replaced
-                    if (start == 0 && end == this.value.length) {
+                    if (start === 0 && end == this.value.length) {
                         this.value = keyChar;
                     }
                     else {
@@ -310,7 +400,7 @@
                     end = start + selectionRange.text.length;
 
                     // Text is fully selected, so it needs to be replaced
-                    if (start == 0 && end == this.value.length) {
+                    if (start === 0 && end == this.value.length) {
                         this.value = keyChar;
                     }
                     else {
@@ -334,42 +424,61 @@
 
             // Firefox doesn't behave properly when trying to backspace or move through
             // a text box with the arrow keys
-            var keys = '8,9,16,17,18,19,20,27,33,34,35,36,37,38,39,40,45,46,144,145';
+            if (defaults.firefox == 'true' || defaults.firefox === true) {
+                var keys = '8,9,16,17,18,19,20,27,33,34,35,36,37,38,39,40,45,144,145';
 
-            if (keys.indexOf(keyCode) == -1 && keyCode != undefined) {
-                this.value = filterValue(this.value, defaults);
+                if (keys.indexOf(keyCode) == -1 && typeof keyCode !== 'undefined') {
+                    if (this.value.length == defaults.maxlength) {
+                        $(this).trigger('autotab-next', defaults);
+                    }
 
-                if (this.value.length == defaults.maxlength) {
-                    $(this).trigger('autotab-next', defaults);
+                    return false;
                 }
-                return false;
+
+                return true;
             }
+
+            if (this.value.length == defaults.maxlength) {
+                $(this).trigger('autotab-next', defaults);
+            }
+
+            return false;
         }).on('paste', function (e) {
+            var defaults = getSettings(this);
+
+            if (!defaults) {
+                return true;
+            }
+
             var handlePaste = function (e, originalValue, previousValue) {
                 if (!e) {
                     return;
                 }
 
-                var defaults = $(e).data('autotab-defaults'),
+                var settings = getSettings(e),
                     maxLength = e.maxLength;
 
-                $(e).data('autotab-defaults', defaults);
+                if (!defaults || defaults.disabled == 'true' || defaults.disabled === true) {
+                    return true;
+                }
+
+                setSettings(e, defaults);
 
                 e.maxLength = 2147483647;
 
                 setTimeout(function () {
-                    if (originalValue == null) {
+                    if (originalValue === null) {
                         originalValue = e.value;
                     }
 
                     var filteredValue;
 
                     // Truncate the pasted text up to the previous element's filtered value
-                    if (previousValue != null) {
-                        filteredValue = filterValue(originalValue.substr(originalValue.indexOf(previousValue) + previousValue.length), defaults).substr(0, maxLength);
+                    if (previousValue !== null) {
+                        filteredValue = filterValue(e, originalValue.substr(originalValue.indexOf(previousValue) + previousValue.length), defaults).substr(0, maxLength);
                     }
                     else {
-                        filteredValue = filterValue(originalValue, defaults).substr(0, maxLength);
+                        filteredValue = filterValue(e, originalValue, defaults).substr(0, maxLength);
                     }
 
                     e.maxLength = maxLength;
@@ -384,7 +493,7 @@
                     if (filteredValue.length == maxLength) {
                         $(e).trigger('autotab-next', defaults);
 
-                        if (!defaults.iOS) {
+                        if (defaults.iOS != 'true' && defaults.iOS !== true) {
                             handlePaste(defaults.target[0], originalValue, filteredValue);
                         }
                     }
@@ -402,7 +511,7 @@
     $.fn.autotab_filter = function (options) {
         var defaults = {};
 
-        if (typeof options == 'string' || typeof options == 'function') {
+        if (typeof options === 'string' || typeof options === 'function') {
             defaults.format = options;
         }
         else {
