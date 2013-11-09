@@ -108,7 +108,7 @@
             }
         }
         // Disable auto tab and filtering
-        else if (method == 'remove' || method == 'destroy') {
+        else if (method == 'remove' || method == 'destroy' || method == 'disable') {
             for (var i = 0, length = this.length; i < length; i++) {
                 var defaults = getSettings(this[i]);
 
