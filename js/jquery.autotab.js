@@ -117,6 +117,16 @@
                 setSettings(this[i], defaults);
             }
         }
+        // Re-enable auto tab and filtering
+        else if (method == 'restore' || method == 'enable') {
+            for (var i = 0, length = this.length; i < length; i++) {
+                var defaults = getSettings(this[i]);
+
+                defaults.disabled = false;
+
+                setSettings(this[i], defaults);
+            }
+        }
         else {
             if (method === null || typeof method === 'undefined') {
                 options = {};

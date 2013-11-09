@@ -19,8 +19,11 @@ _Pasting support has basic functionality and has a lot of room for improvement, 
 * [Setup and Usage](#setup-and-usage)
   * [Auto Tabbing](#auto-tabbing)
     * [Examples](#examples)
-  * [Filtering](#filtering)
+  * [Remove and Restore](#remove-and-restore)
     * [Examples](#examples-1)
+  * [Filtering](#filtering)
+    * [Examples](#examples-2)
+  * [Forced Auto Tabbing](#forced-auto-tabbing)
 * [Options](#options)
 * [Filter Formats](#filter-formats)
 * [Feedback](#feedback)
@@ -56,8 +59,12 @@ __Note:__ If the selector matches multiple elements, the target and previous fie
     <td>Accepts no arguments and applies auto tabbing rules only.</td>
   </tr>
   <tr>
-    <td>.autotab(string)</td>
-    <td><strong>string</strong>: Defines the filter format that will be used on all matched elements.</td>
+    <td valign="top">.autotab(string)</td>
+    <td>
+      <strong>string</strong>: Can be a filter format or a value that tells the script to remove or restore auto tab and filtering functionality.
+      <br />
+      <strong>Note</strong>: Previous auto tabbing order will be overwritten. To change the filter only, call <code>.autotab('filter', '')</code>
+    </td>
   </tr>
   <tr>
     <td>.autotab(object)</td>
@@ -119,6 +126,53 @@ $('#alphanumeric5').autotab({ format: 'alphanumeric', previous: '#alphanumeric4'
 ```
 
 
+### Remove and Restore
+
+<table width="100%">
+  <tr>
+    <td width="35%" valign="top">
+      .autotab('remove|destroy|disable')
+    </td>
+    <td>
+      <strong>string</strong>: Disables auto tab and filtering functionality on all matched elements.
+      <br />
+      <strong>Note</strong>: Both <code>destroy</code> and <code>remove</code> will disable auto tab and filtering. Standard and custom event bindings persist as they check the status of an element when called. Removing the <code>keydown</code> and <code>keypress</code> can have a negative impact in both user and developer experience if the same events have been bound in other areas.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">.autotab('restore|enable')</td>
+    <td>
+      <strong>string</strong>: Restores auto tab and filtering functionality on all matched elements.
+    </td>
+  </tr>
+</table>
+
+
+#### Examples
+
+Manually turn off auto tab and filtering functionality on all text boxes.
+
+```js
+$('#remove-autotab').on('click', function () {
+    $('input[type=text]').autotab('remove');
+});
+```
+```html
+<button id="remove-autotab">Turn Off</button>
+```
+
+Manually turn on auto tab and filtering functionality on all text boxes. 
+
+```js
+$('#restore-autotab').on('click', function () {
+    $('input[type=text]').autotab('restore');
+});
+```
+```html
+<button id="restore-autotab">Turn On</button>
+```
+
+
 ### Filtering
 
 __Note:__ If passing an object, the target and previous fields are ignored, if included, to preserve previously established auto tab rules. Use `.autotab(object)` to modify the target and previous fields.
@@ -177,7 +231,26 @@ $('#product-key').autotab('filter', { format: 'alphanumeric', uppercase: true })
 $('#ip-address').autotab('filter', { format: 'custom', pattern: '[^0-9\.]' });
 $('#function').autotab('filter', function (text) { alert(text); });
 $('#number1, #number2, #number3').autotab('filter', 'number');
+$('.ipv6').autotab('filter', 'hexadecimal');
 ```
+
+
+### Forced Auto Tabbing
+
+Because there may be scenarios that reqire a field auto tab when a criteria is met, Autotab comes with two functions that can be called at any point.
+
+__Note__: These methods are only useful if an element setup with Autotab has focus.
+
+<table width="100%">
+  <tr>
+    <td width="30%" valign="top">$.autotab.next()</td>
+    <td>Triggers the `autotab-next` event, which sets the focus on the target element, if it exists.</td>
+  </tr>
+  <tr>
+    <td valign="top">$.autotab.previous()</td>
+    <td>Triggers the `autotab-previous` event, which sets the focus on the previous element, if it exists.</td>
+  </tr>
+</table>
 
 
 ## Options
@@ -200,7 +273,7 @@ var options = {
     <td>
       <strong>string</strong>: Speficies which format rule to use on a text box's value.
       <br />
-      <strong>function</strong>: If a single regular expression is insufficient, a function can be used for custom formatting.
+      <strong>function(value, element)</strong>: If a single regular expression is insufficient, a function can be used for custom formatting. The parameter <code>value</code> is the typed character and <code>element</code> is the focused JavaScript element.
       <br />
       <strong>Note</strong>: Go to <a href="#filter-formats">Filter Formats</a> to see each available <code>format</code> option.
     </td>
@@ -289,6 +362,10 @@ Autotab has several filter formats available. If none of the formats meet your n
     <td>Allows only letters and numbers.</td>
   </tr>
   <tr>
+    <td>format: 'hex|hexadecimal'</td>
+    <td>Allows only letters A-F, a-f and numbers.</td>
+  </tr>
+  <tr>
     <td>
       format: 'custom',
       <br />
@@ -301,8 +378,12 @@ Autotab has several filter formats available. If none of the formats meet your n
     </td>
   </tr>
   <tr>
-    <td>format: function</td>
-    <td>Allows a developer to provide a their own function in case a regular expression is insufficient.</td>
+    <td valign="top">format: function(value, element)</td>
+    <td>
+      Allows a developer to provide a their own function in case a regular expression is insufficient.
+      <br />
+      <strong>Note</strong>: <code>value</code> is the typed character, <code>element</code> is the focused JavaScript element.
+    </td>
   </tr>
 </table>
 

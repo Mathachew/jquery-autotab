@@ -8,48 +8,48 @@
         <script src="js/jquery.autotab.js"></script>
         <script>
         $(function () {
-            $('#add-autotab').on('click', function () {
-                $('input[type=text]').autotab();
-                $('.number').autotab('filter', 'number');
-                $('.ssn').autotab('filter', 'number');
-                $('.text').autotab('filter', 'text');
-                $('.alpha').autotab('filter', 'alpha');
-                $('.alphanumeric').autotab('filter', { format: 'alphanumeric', uppercase: true });
-                $('#regex').autotab({ format: 'custom', pattern: '[^0-9\.]', maxlength: 15 });
-                $('#function').autotab(function (value, element) {
-                    var parsedValue = parseInt(value, 10);
+            $('input[type=text]').autotab();
+            $('.number').autotab('filter', 'number');
+            $('.ssn').autotab('filter', 'number');
+            $('.text').autotab('filter', 'text');
+            $('.alpha').autotab('filter', 'alpha');
+            $('.alphanumeric').autotab('filter', { format: 'alphanumeric', uppercase: true });
+            $('#regex').autotab({ format: 'custom', pattern: '[^0-9\.]', maxlength: 15 });
+            $('#function').autotab(function (value, element) {
+                var parsedValue = parseInt(value, 10);
 
-                    if (!value || parsedValue != value) {
-                        return '';
-                    }
+                if (!value || parsedValue != value) {
+                    return '';
+                }
 
-                    var newValue = element.value + value;
+                var newValue = element.value + value;
 
-                    if (newValue > 12) {
-                        $.autotab.next();
-                        return 2;
-                    }
-                    else if (element.value.length == 0 && value > 1) {
-                        $.autotab.next();
-                        return value;
-                    }
-                    else if (element.value.length == 1 && parsedValue === 0 && newValue != 10) {
-                        $.autotab.next();
-                        return 1;
-                    }
-
+                if (newValue > 12) {
+                    $.autotab.next();
+                    return 2;
+                }
+                else if (element.value.length == 0 && value > 1) {
+                    $.autotab.next();
                     return value;
-                });
-                $('.hexadecimal').autotab('filter', 'hexadecimal');
-                $('#autotab-status span').removeClass('off').addClass('on').text('On');
+                }
+                else if (element.value.length == 1 && parsedValue === 0 && newValue != 10) {
+                    $.autotab.next();
+                    return 1;
+                }
+
+                return value;
             });
+            $('.hexadecimal').autotab('filter', 'hexadecimal');
 
             $('#remove-autotab').on('click', function () {
                 $('input[type=text]').autotab('remove');
                 $('#autotab-status span').removeClass('on').addClass('off').text('Off');
             });
 
-            $('#add-autotab').click();
+            $('#restore-autotab').on('click', function () {
+                $('input[type=text]').autotab('restore');
+                $('#autotab-status span').removeClass('off').addClass('on').text('On');
+            });
         });
         </script>
 
@@ -134,7 +134,7 @@
             <div>
                 <p>Use the buttons below to turn Autotab on or off. Turning Autotab off will remove both auto tabbing and filtering.</p>
 
-                <button id="add-autotab">Turn On</button>
+                <button id="restore-autotab">Turn On</button>
                 <button id="remove-autotab">Turn Off</button>
                 <span id="autotab-status">Autotab status: <span class="on">On</span></span>
             </div>
