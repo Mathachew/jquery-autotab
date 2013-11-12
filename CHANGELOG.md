@@ -1,3 +1,16 @@
+## 1.4 (2013-11-12)
+
+Features:
+
+* pasting support has been greatly improved and behaves more intelligently
+* improved support in Firefox so that special keys no longer have to be tracked in order to be allowed
+
+Bug fixes:
+
+* fixed a bug where the `del` key would do nothing in Firefox (introduced in 1.3)
+* fixed several instances of bad evaluations of boolean values as a result of browsers storing data-* differently (introduced in 1.3)
+
+
 ## 1.3 (2013-11-09)
 
 Features:
