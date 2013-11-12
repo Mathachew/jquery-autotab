@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.3
+ * Autotab - jQuery plugin 1.4
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2013 Matthew Miller
@@ -54,7 +54,7 @@
         settings.firefox = e.getAttribute('data-autotab-Firefox') || (typeof InstallTrigger !== 'undefined');
 
         // Save settings on first run
-        if (!settings.loaded) {
+        if (settings.loaded != 'true' && settings.loaded !== true) {
             setSettings(e, settings);
         }
 
@@ -212,16 +212,16 @@
             value = value.replace(pattern, '');
         }
 
-        if (defaults.nospace) {
+        if (defaults.nospace == 'true' || defaults.nospace === true) {
             pattern = new RegExp('[ ]+', 'g');
             value = value.replace(pattern, '');
         }
 
-        if (defaults.uppercase) {
+        if (defaults.uppercase == 'true' || defaults.uppercase === true) {
             value = value.toUpperCase();
         }
 
-        if (defaults.lowercase) {
+        if (defaults.lowercase == 'true' || defaults.lowercase === true) {
             value = value.toLowerCase();
         }
 
@@ -264,7 +264,7 @@
             defaults.target = null;
         }
 
-        if (!defaults.loaded) {
+        if (settings.loaded != 'true' && settings.loaded !== true) {
             defaults.loaded = true;
             setSettings(element, defaults);
         }
@@ -303,7 +303,7 @@
 
                 // When setting value = value, Firefox will not place the cursor at the end of a textbox
                 // when the cursor was last at any point before the final character within the same textbox
-                if (defaults.firefox) {
+                if (defaults.firefox == 'true' || defaults.firefox === true) {
                     var length = defaults.previous.val().length;
                     defaults.previous[0].setSelectionRange(length, length);
                 }
@@ -316,7 +316,7 @@
         }).on('keydown', function (e) {
             var defaults = getSettings(this);
 
-            if (!defaults || defaults.disabled == 'true') {
+            if (!defaults || defaults.disabled == 'true' || defaults.disabled === true) {
                 return true;
             }
 
@@ -349,18 +349,17 @@
                 return true;
             }
 
+            // e.charCode == 0 indicates a special key has been pressed, which only Firefox triggers
+            if (((defaults.firefox == 'true' || defaults.firefox === true) && e.charCode === 0) || e.ctrlKey || e.altKey) {
+                return true;
+            }
+
             var keyCode = e.which || e.keyCode,
                 keyChar = filterValue(this, String.fromCharCode(keyCode), defaults),
                 hasValue = document.selection && document.selection.createRange ? true : (e.charCode > 0);
 
-            if (e.ctrlKey || e.altKey) {
-                return true;
-            }
-
             if (hasValue && (keyChar === null || keyChar === '')) {
-                // Returns true whenever a paste is occurring
-                // Speficially added for Firefox
-                return e.ctrlKey;
+                return false;
             }
 
             // Many, many thanks to Tim Down for this solution: http://stackoverflow.com/a/3923320/94656
@@ -422,22 +421,6 @@
                 }
             }
 
-            // Firefox doesn't behave properly when trying to backspace or move through
-            // a text box with the arrow keys
-            if (defaults.firefox == 'true' || defaults.firefox === true) {
-                var keys = '8,9,16,17,18,19,20,27,33,34,35,36,37,38,39,40,45,144,145';
-
-                if (keys.indexOf(keyCode) == -1 && typeof keyCode !== 'undefined') {
-                    if (this.value.length == defaults.maxlength) {
-                        $(this).trigger('autotab-next', defaults);
-                    }
-
-                    return false;
-                }
-
-                return true;
-            }
-
             if (this.value.length == defaults.maxlength) {
                 $(this).trigger('autotab-next', defaults);
             }
@@ -450,57 +433,57 @@
                 return true;
             }
 
-            var handlePaste = function (e, originalValue, previousValue) {
-                if (!e) {
-                    return;
-                }
+            this.maxLength = 2147483647;
 
-                var settings = getSettings(e),
-                    maxLength = e.maxLength;
-
-                if (!defaults || defaults.disabled == 'true' || defaults.disabled === true) {
-                    return true;
-                }
-
-                setSettings(e, defaults);
-
-                e.maxLength = 2147483647;
-
+            (function (e, originDefaults) {
                 setTimeout(function () {
-                    if (originalValue === null) {
-                        originalValue = e.value;
-                    }
+                    var lastIndex = -1,
+                        hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.value = e.value.toLowerCase();
 
-                    var filteredValue;
+                    e.maxLength = originDefaults.maxlength;
+                    e.value = filterValue(e, e.value, originDefaults).substr(0, originDefaults.maxlength);
 
-                    // Truncate the pasted text up to the previous element's filtered value
-                    if (previousValue !== null) {
-                        filteredValue = filterValue(e, originalValue.substr(originalValue.indexOf(previousValue) + previousValue.length), defaults).substr(0, maxLength);
-                    }
-                    else {
-                        filteredValue = filterValue(e, originalValue, defaults).substr(0, maxLength);
-                    }
+                    var handlePaste = function (e, previousValue) {
+                        if (!e) {
+                            return;
+                        }
 
-                    e.maxLength = maxLength;
+                        for (var i = 0, count = previousValue.length; i < count; i++) {
+                            lastIndex = hiddenInput.value.indexOf(previousValue.charAt(i), lastIndex) + 1;
+                        }
 
-                    if (!filteredValue) {
-                        e.value = '';
-                        return;
-                    }
+                        var defaults = getSettings(e),
+                            trimmedValue = hiddenInput.value.substr(lastIndex),
+                            filteredValue = filterValue(e, trimmedValue, defaults).substr(0, defaults.maxlength);
 
-                    e.value = filteredValue;
+                        if (!filteredValue) {
+                            e.value = '';
+                            return;
+                        }
 
-                    if (filteredValue.length == maxLength) {
+                        e.value = filteredValue;
+
+                        if (filteredValue.length == defaults.maxlength) {
+                            $(e).trigger('autotab-next', defaults);
+
+                            if (defaults.iOS != 'true' && defaults.iOS !== true) {
+                                handlePaste(defaults.target[0], filteredValue);
+                            }
+                        }
+
+                    };
+
+                    if (e.value.length == originDefaults.maxlength) {
                         $(e).trigger('autotab-next', defaults);
 
                         if (defaults.iOS != 'true' && defaults.iOS !== true) {
-                            handlePaste(defaults.target[0], originalValue, filteredValue);
+                            handlePaste(originDefaults.target[0], e.value.toLowerCase());
                         }
                     }
                 }, 1);
-            };
-
-            handlePaste(this, null, null);
+            })(this, defaults);
         });
     };
 

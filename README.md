@@ -10,8 +10,6 @@ Autotab is a jQuery plugin that provides auto tabbing and filtering on text fiel
 * Populate multiple text fields by pasting into one.
 * It is small, fast, easy to load and built on the powerful jQuery library.
 
-_Pasting support has basic functionality and has a lot of room for improvement, so use at your own risk._
-
 
 ## Table of Contents
 * [Requirements](#requirements)
