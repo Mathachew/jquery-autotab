@@ -20,6 +20,7 @@ Features:
 * added Firefox detection so that code specific to it can run separate from everything else
 * improved support for using a function as the format
 * refactored how Autotab's settings are stored as the previous method caused issues with turning it off and on again
+* added support for loading filter formats using `data-autotab-format`
 * added support for hexadecimal filtering
 
 Bug fixes:
