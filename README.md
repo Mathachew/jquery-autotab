@@ -188,6 +188,8 @@ __Note:__ If passing an object, the target and previous fields are ignored, if i
   </tr>
 </table>
 
+Because of how Autotab's settings are stored, it is possible to define the filter format using `data-autotab-format`. If using `custom`, place your regular expression in `data-autotab-pattern`.
+
 
 #### Examples
 
@@ -216,6 +218,17 @@ $('.alphanumeric').autotab('filter', { format: 'alphanumeric', uppercase: true }
     <input type="text" id="alphanumeric3" class="alphanumeric" maxlength="5" size="4" /> -
     <input type="text" id="alphanumeric4" class="alphanumeric" maxlength="5" size="4" /> -
     <input type="text" id="alphanumeric5" class="alphanumeric" maxlength="5" size="4" />
+</div>
+```
+
+Manually defines number filtering via `data-autotab-format`. In this example, `$(selector).autotab()` will take the attribute into account.
+
+```html
+<div>
+    <label>Phone Number</label>
+    <input type="text" id="phone1" maxlength="3" size="3" data-autotab-format="number" /> -
+    <input type="text" id="phone2" maxlength="3" size="3" data-autotab-format="number" /> -
+    <input type="text" id="phone3" maxlength="4" size="4" data-autotab-format="number" />
 </div>
 ```
 
