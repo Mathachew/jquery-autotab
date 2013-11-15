@@ -8,6 +8,7 @@ Autotab is a jQuery plugin that provides auto tabbing and filtering on text fiel
 * Allow your users to easily modify your text in a tab that would otherwise auto tab away.
 * Reduce the amount of bad data submitted in a form by filtering text fields.
 * Populate multiple text fields by pasting into one.
+* Enhance text fields by auto tabbing when a specific character is pressed.
 * It is small, fast, easy to load and built on the powerful jQuery library.
 
 
@@ -275,7 +276,8 @@ var options = {
     nospace: boolean,
     maxlength: integer,
     target: string|element,
-    previous: string|element
+    previous: string|element,
+    trigger: string|array
 };
 ```
 <table width="100%">
@@ -341,6 +343,17 @@ var options = {
       <strong>string</strong>: A selector identifying the next element.
       <br/>
       <strong>element</strong>: The JavaScript or jQuery element.
+    </td>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">trigger</td>
+    <td>
+      Triggers <code>autotab-next</code> when the specified characters are pressed.
+      <br/>
+      <strong>string</strong>: A string of one or more characters
+      <br/>
+      <strong>element</strong>: An array of one or more strings
     </td>
     </td>
   </tr>
