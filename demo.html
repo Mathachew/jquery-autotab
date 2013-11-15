@@ -40,6 +40,7 @@
                 return value;
             });
             $('.hexadecimal').autotab('filter', 'hexadecimal');
+            $('.ip').autotab('filter', { format: 'number', trigger: '.' });
 
             $('#remove-autotab').on('click', function () {
                 $('input[type=text]').autotab('remove');
@@ -345,6 +346,25 @@ $('#function').autotab(function (value, element) {
                 </div>
                 <pre>
 $('.hexadecimal').autotab('filter', 'hexadecimal');
+</pre>
+            </div>
+
+            <hr />
+
+            <div>
+                <div class="example">
+                    <label for="ip1">Numbers only with support for auto tabbing on periods</label>
+
+                    <input type="text" id="ip1" class="ip" maxlength="3" size="4" />
+                    .
+                    <input type="text" id="ip2" class="ip" maxlength="3" size="4" />
+                    .
+                    <input type="text" id="ip3" class="ip" maxlength="3" size="4" />
+                    .
+                    <input type="text" id="ip4" class="ip" maxlength="3" size="4" />
+                </div>
+                <pre>
+$('.ip').autotab('filter', { format: 'number', trigger: '.' });
 </pre>
             </div>
         </article>

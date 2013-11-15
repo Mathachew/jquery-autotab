@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.4
+ * Autotab - jQuery plugin 1.5b
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2013 Matthew Miller
@@ -9,10 +9,13 @@
  */
 
 (function ($) {
-    var settings = {
-        tabPause: 800,
-        focusChange: null
-    };
+    var platform = navigator.platform,
+        settings = {
+            tabPause: 800,
+            focusChange: null,
+            iOS: (platform === 'iPad' || platform === 'iPhone' || platform === 'iPod'),
+            firefox: (typeof InstallTrigger !== 'undefined')
+        };
 
     // Native get/setAttribute methods are much faster than $.data, so $.data is used for objects only: http://jsperf.com/dataset-vs-jquery-data/4
     // When removing then resetting auto tab, storing an object resulted in overwritten values, leading to this implementation
@@ -22,39 +25,35 @@
         }
 
         for (var key in settings) {
-            if (key == 'format' || key == 'target' || key == 'previous') {
-                $(e).data('autotab-' + key, settings[key]);
-            }
-            else {
-                e.setAttribute('data-autotab-' + key, settings[key]);
-            }
+            $(e).data('autotab-' + key, settings[key]);
         }
     };
 
     var getSettings = function (e) {
-        var platform = navigator.platform,
-            settings = {
-                loaded: false,
-                disabled: false,
-                pattern: null,
-                uppercase: false,
-                lowercase: false,
-                nospace: false,
-                maxlength: 2147483647
-            };
+        var settings = {
+            format: 'all',
+            loaded: false,
+            disabled: false,
+            pattern: null,
+            uppercase: false,
+            lowercase: false,
+            nospace: false,
+            maxlength: 2147483647,
+            target: null,
+            previous: null,
+            trigger: null
+        };
 
         for (var key in settings) {
-            settings[key] = e.getAttribute('data-autotab-' + key) || settings[key];
+            settings[key] = $(e).data('autotab-' + key) || settings[key];
         }
 
-        settings.format = $(e).data('autotab-format') || 'all';
-        settings.target = $(e).data('autotab-target') || settings.target;
-        settings.previous = $(e).data('autotab-previous') || settings.previous;
-        settings.iOS = e.getAttribute('data-autotab-iOS') || (platform === 'iPad' || platform === 'iPhone' || platform === 'iPod');
-        settings.firefox = e.getAttribute('data-autotab-Firefox') || (typeof InstallTrigger !== 'undefined');
-
         // Save settings on first run
-        if (settings.loaded != 'true' && settings.loaded !== true) {
+        if (!settings.loaded) {
+            if (settings.trigger !== null && typeof settings.trigger === 'string') {
+                settings.trigger = settings.trigger.toString();
+            }
+
             setSettings(e, settings);
         }
 
@@ -212,16 +211,16 @@
             value = value.replace(pattern, '');
         }
 
-        if (defaults.nospace == 'true' || defaults.nospace === true) {
+        if (defaults.nospace) {
             pattern = new RegExp('[ ]+', 'g');
             value = value.replace(pattern, '');
         }
 
-        if (defaults.uppercase == 'true' || defaults.uppercase === true) {
+        if (defaults.uppercase) {
             value = value.toUpperCase();
         }
 
-        if (defaults.lowercase == 'true' || defaults.lowercase === true) {
+        if (defaults.lowercase) {
             value = value.toLowerCase();
         }
 
@@ -231,7 +230,7 @@
     var autotabBind = function (element, options) {
         var defaults = getSettings(element);
 
-        if (defaults.disabled == 'true' || defaults.disabled === true) {
+        if (defaults.disabled) {
             defaults.disabled = false;
             defaults.target = null;
             defaults.previous = null;
@@ -264,7 +263,7 @@
             defaults.target = null;
         }
 
-        if (settings.loaded != 'true' && settings.loaded !== true) {
+        if (!settings.loaded) {
             defaults.loaded = true;
             setSettings(element, defaults);
         }
@@ -278,13 +277,9 @@
                 defaults = getSettings(this);
             }
 
-            if (defaults.disabled == 'true' || defaults.disabled === true) {
-                return;
-            }
-
-            if (defaults.target.length) {
+            if (!defaults.disabled && defaults.target.length) {
                 // Using focus on iOS devices is a pain, so use the browser's next/previous buttons to proceed
-                if (defaults.iOS != 'true' && defaults.iOS !== true) {
+                if (!settings.iOS) {
                     defaults.target.focus().select();
                     settings.focusChange = new Date();
                 }
@@ -294,16 +289,12 @@
                 defaults = getSettings(this);
             }
 
-            if (defaults.disabled == 'true' || defaults.disabled === true) {
-                return;
-            }
-
-            if (defaults.previous.length) {
+            if (!defaults.disabled && defaults.previous.length) {
                 defaults.previous.focus();
 
                 // When setting value = value, Firefox will not place the cursor at the end of a textbox
                 // when the cursor was last at any point before the final character within the same textbox
-                if (defaults.firefox == 'true' || defaults.firefox === true) {
+                if (settings.firefox) {
                     var length = defaults.previous.val().length;
                     defaults.previous[0].setSelectionRange(length, length);
                 }
@@ -316,7 +307,7 @@
         }).on('keydown', function (e) {
             var defaults = getSettings(this);
 
-            if (!defaults || defaults.disabled == 'true' || defaults.disabled === true) {
+            if (!defaults || defaults.disabled) {
                 return true;
             }
 
@@ -339,24 +330,34 @@
                     return false;
                 }
             }
-            else {
-                settings.focusChange = null;
-            }
         }).on('keypress', function (e) {
             var defaults = getSettings(this);
 
-            if (!defaults || defaults.disabled == 'true' || defaults.disabled === true) {
-                return true;
-            }
-
             // e.charCode == 0 indicates a special key has been pressed, which only Firefox triggers
-            if (((defaults.firefox == 'true' || defaults.firefox === true) && e.charCode === 0) || e.ctrlKey || e.altKey) {
+            if (!defaults || defaults.disabled || (settings.firefox && e.charCode === 0) || e.ctrlKey || e.altKey) {
                 return true;
             }
 
             var keyCode = e.which || e.keyCode,
-                keyChar = filterValue(this, String.fromCharCode(keyCode), defaults),
-                hasValue = document.selection && document.selection.createRange ? true : (e.charCode > 0);
+                keyChar = String.fromCharCode(keyCode);
+
+            // Prevents auto tabbing when defaults.trigger is pressed
+            if (defaults.trigger !== null && defaults.trigger.indexOf(keyChar) >= 0) {
+                if (settings.focusChange !== null && (new Date().getTime() - settings.focusChange.getTime()) < settings.tabPause) {
+                    settings.focusChange = null;
+                }
+                else {
+                    $(this).trigger('autotab-next', defaults);
+                }
+
+                return false;
+            }
+
+            settings.focusChange = null;
+
+            var hasValue = document.selection && document.selection.createRange ? true : (e.charCode > 0);
+
+            keyChar = filterValue(this, keyChar, defaults);
 
             if (hasValue && (keyChar === null || keyChar === '')) {
                 return false;
@@ -468,7 +469,7 @@
                         if (filteredValue.length == defaults.maxlength) {
                             $(e).trigger('autotab-next', defaults);
 
-                            if (defaults.iOS != 'true' && defaults.iOS !== true) {
+                            if (!settings.iOS) {
                                 handlePaste(defaults.target[0], filteredValue);
                             }
                         }
@@ -478,7 +479,7 @@
                     if (e.value.length == originDefaults.maxlength) {
                         $(e).trigger('autotab-next', defaults);
 
-                        if (defaults.iOS != 'true' && defaults.iOS !== true) {
+                        if (!settings.iOS) {
                             handlePaste(originDefaults.target[0], e.value.toLowerCase());
                         }
                     }
