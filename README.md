@@ -249,7 +249,7 @@ $('.ipv6').autotab('filter', 'hexadecimal');
 
 ### Forced Auto Tabbing
 
-Because there may be scenarios that reqire a field auto tab when a criteria is met, Autotab comes with two functions that can be called at any point.
+Autotab comes with two functions that can be used to force an auto tab from a field if a criteria is met.
 
 __Note__: These methods are only useful if an element setup with Autotab has focus.
 
