@@ -7,7 +7,7 @@ Features:
 
 Bug fixes:
 
-* fixed a bug that prevented the `change` event from triggering
+* fixed a bug that prevented the `change` event from triggering (#17)
 
 
 ## 1.4 (2013-11-12)
