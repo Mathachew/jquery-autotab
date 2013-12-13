@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.5b
+ * Autotab - jQuery plugin 1.5
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2013 Matthew Miller
@@ -355,7 +355,8 @@
 
             settings.focusChange = null;
 
-            var hasValue = document.selection && document.selection.createRange ? true : (e.charCode > 0);
+            var hasValue = document.selection && document.selection.createRange ? true : (e.charCode > 0),
+                valueChanged = false;
 
             keyChar = filterValue(this, keyChar, defaults);
 
@@ -371,22 +372,6 @@
                     // Non-IE browsers and IE 9
                     start = this.selectionStart;
                     end = this.selectionEnd;
-
-                    // Text is fully selected, so it needs to be replaced
-                    if (start === 0 && end == this.value.length) {
-                        this.value = keyChar;
-                    }
-                    else {
-                        if (this.value.length == this.maxLength) {
-                            $(this).trigger('autotab-next', defaults);
-                            return false;
-                        }
-
-                        this.value = this.value.slice(0, start) + keyChar + this.value.slice(end);
-                    }
-
-                    // Move the caret
-                    this.selectionStart = this.selectionEnd = start + 1;
                 }
                 else if (document.selection && document.selection.createRange) {
                     // For IE up to version 8
@@ -398,35 +383,27 @@
                     precedingRange.setEndPoint("EndToStart", textInputRange);
                     start = precedingRange.text.length;
                     end = start + selectionRange.text.length;
+                }
 
-                    // Text is fully selected, so it needs to be replaced
-                    if (start === 0 && end == this.value.length) {
-                        this.value = keyChar;
-                    }
-                    else {
-                        if (this.value.length == this.maxLength) {
-                            $(this).trigger('autotab-next', defaults);
-                            return false;
-                        }
-
-                        this.value = this.value.slice(0, start) + keyChar + this.value.slice(end);
+                // Text is fully selected, so it needs to be replaced
+                if (start === 0 && end == this.value.length) {
+                    valueChanged = true;
+                }
+                else {
+                    if (this.value.length == this.maxLength) {
+                        $(this).trigger('autotab-next', defaults);
+                        return false;
                     }
 
-                    start++;
-
-                    // Move the caret
-                    textInputRange = this.createTextRange();
-                    textInputRange.collapse(true);
-                    textInputRange.move("character", start - (this.value.slice(0, start).split("\r\n").length - 1));
-                    textInputRange.select();
+                    valueChanged = true;
                 }
             }
 
-            if (this.value.length == defaults.maxlength) {
+            if (valueChanged && (this.value.length + 1) == defaults.maxlength) {
                 $(this).trigger('autotab-next', defaults);
             }
 
-            return false;
+            return valueChanged;
         }).on('paste', function (e) {
             var defaults = getSettings(this);
 
