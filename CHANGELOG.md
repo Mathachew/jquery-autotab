@@ -5,6 +5,10 @@ Features:
 * added support for auto tabbing by specific keys
 * refactored various areas dealing with boolean evaulations and checking for iOS and Firefox
 
+Bug fixes:
+
+* fixed a bug that prevented the `change` event from triggering
+
 
 ## 1.4 (2013-11-12)
 
