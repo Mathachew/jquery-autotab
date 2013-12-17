@@ -2,7 +2,7 @@
 
 Bug fixes:
 
-* in Internet Explorer, reaching the max length caused the last character to appear in the target element after auto tabbing
+* in Internet Explorer, reaching the max length caused the last character to appear in the target element after auto tabbing (#19)
 
 
 ## 1.5
