@@ -1,3 +1,10 @@
+## 1.5.1
+
+Bug fixes:
+
+* in Internet Explorer, reaching the max length caused the last character to appear in the target element after auto tabbing
+
+
 ## 1.5
 
 Features:
