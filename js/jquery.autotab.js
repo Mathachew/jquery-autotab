@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.5
+ * Autotab - jQuery plugin 1.5.1
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2013 Matthew Miller
@@ -67,18 +67,14 @@
             var e = $(document.activeElement);
 
             if (e.length) {
-                setTimeout(function () {
-                    e.trigger('autotab-next');
-                }, 1);
+                e.trigger('autotab-next');
             }
         },
         previous: function () {
             var e = $(document.activeElement);
 
             if (e.length) {
-                setTimeout(function () {
-                    e.trigger('autotab-previous');
-                }, 1);
+                e.trigger('autotab-previous');
             }
         }
     };
@@ -273,37 +269,35 @@
         }
 
         $(element).on('autotab-next', function (event, defaults) {
-            if (!defaults) {
-                defaults = getSettings(this);
-            }
-
-            if (!defaults.disabled && defaults.target.length) {
-                // Using focus on iOS devices is a pain, so use the browser's next/previous buttons to proceed
-                if (!settings.iOS) {
-                    defaults.target.focus().select();
-                    settings.focusChange = new Date();
+            var self = this;
+            setTimeout(function () {
+                if (!defaults) {
+                    defaults = getSettings(self);
                 }
-            }
+
+                if (!defaults.disabled && defaults.target.length) {
+                    // Using focus on iOS devices is a pain, so use the browser's next/previous buttons to proceed
+                    if (!settings.iOS) {
+                        defaults.target.focus().select();
+                        settings.focusChange = new Date();
+                    }
+                }
+            }, 1);
         }).on('autotab-previous', function (event, defaults) {
-            if (!defaults) {
-                defaults = getSettings(this);
-            }
-
-            if (!defaults.disabled && defaults.previous.length) {
-                defaults.previous.focus();
-
-                // When setting value = value, Firefox will not place the cursor at the end of a textbox
-                // when the cursor was last at any point before the final character within the same textbox
-                if (settings.firefox) {
-                    var length = defaults.previous.val().length;
-                    defaults.previous[0].setSelectionRange(length, length);
-                }
-                else {
-                    defaults.previous.val(defaults.previous.val());
+            var self = this;
+            setTimeout(function () {
+                if (!defaults) {
+                    defaults = getSettings(self);
                 }
 
-                settings.focusChange = null;
-            }
+                var previous = defaults.previous;
+
+                if (!defaults.disabled && previous.length) {
+                    var value = previous.val();
+                    previous.focus().val(value.substring(0, value.length - 1));
+                    settings.focusChange = null;
+                }
+            }, 1);
         }).on('keydown', function (e) {
             var defaults = getSettings(this);
 
