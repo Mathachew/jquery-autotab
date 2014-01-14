@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.5.1
+ * Autotab - jQuery plugin 1.5.2
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2013 Matthew Miller
@@ -41,7 +41,9 @@
             maxlength: 2147483647,
             target: null,
             previous: null,
-            trigger: null
+            trigger: null,
+            originalValue: '',
+            changed: false
         };
 
         for (var key in settings) {
@@ -294,10 +296,27 @@
 
                 if (!defaults.disabled && previous.length) {
                     var value = previous.val();
-                    previous.focus().val(value.substring(0, value.length - 1));
+
+                    if (value.length) {
+                        previous.focus().val(value.substring(0, value.length - 1));
+                        setSettings(previous, { changed: true });
+                    }
+                    else {
+                        previous.focus();
+                    }
+
                     settings.focusChange = null;
                 }
             }, 1);
+        }).on('focus', function () {
+            setSettings(this, { originalValue: this.value });
+        }).on('blur', function () {
+            var defaults = getSettings(this);
+
+            if (defaults.changed && this.value != defaults.originalValue) {
+                setSettings(this, { changed: false });
+                $(this).change();
+            }
         }).on('keydown', function (e) {
             var defaults = getSettings(this);
 
@@ -309,8 +328,13 @@
 
             // Go to the previous element when backspace
             // is pressed in an empty input field
-            if (keyCode == 8 && this.value.length === 0 && defaults.previous.length) {
-                $(this).trigger('autotab-previous', defaults);
+            if (keyCode == 8) {
+                if (this.value.length === 0 && defaults.previous.length) {
+                    $(this).trigger('autotab-previous', defaults);
+                }
+                else {
+                    setSettings(this, { changed: (this.value != defaults.originalValue) });
+                }
             }
             else if (keyCode == 9 && settings.focusChange !== null) {
                 // Tab backwards
@@ -349,8 +373,7 @@
 
             settings.focusChange = null;
 
-            var hasValue = document.selection && document.selection.createRange ? true : (e.charCode > 0),
-                valueChanged = false;
+            var hasValue = document.selection && document.selection.createRange ? true : (e.charCode > 0);
 
             keyChar = filterValue(this, keyChar, defaults);
 
@@ -360,12 +383,14 @@
 
             // Many, many thanks to Tim Down for this solution: http://stackoverflow.com/a/3923320/94656
             if (hasValue && (this.value.length <= this.maxLength)) {
-                var start, end;
+                var start, end,
+                    selectionType = 0;
 
                 if (typeof this.selectionStart === 'number' && typeof this.selectionEnd === 'number') {
                     // Non-IE browsers and IE 9
                     start = this.selectionStart;
                     end = this.selectionEnd;
+                    selectionType = 1;
                 }
                 else if (document.selection && document.selection.createRange) {
                     // For IE up to version 8
@@ -377,11 +402,13 @@
                     precedingRange.setEndPoint("EndToStart", textInputRange);
                     start = precedingRange.text.length;
                     end = start + selectionRange.text.length;
+                    selectionType = 2;
                 }
 
                 // Text is fully selected, so it needs to be replaced
                 if (start === 0 && end == this.value.length) {
-                    valueChanged = true;
+                    this.value = keyChar;
+                    setSettings(this, { changed: (this.value != defaults.originalValue) });
                 }
                 else {
                     if (this.value.length == this.maxLength) {
@@ -389,15 +416,32 @@
                         return false;
                     }
 
-                    valueChanged = true;
+                    this.value = this.value.slice(0, start) + keyChar + this.value.slice(end);
+                    setSettings(this, { changed: (this.value != defaults.originalValue) });
+
+                    // Prevents the cursor position from being set to the end of the text box
+                    if (this.value.length != defaults.maxlength) {
+                        start++;
+
+                        if (selectionType == 1) {
+                            this.selectionStart = this.selectionEnd = start;
+                        }
+                        else if (selectionType == 2) {
+                            var range = this.createTextRange();
+                            range.collapse(true);
+                            range.moveEnd('character', start);
+                            range.moveStart('character', start);
+                            range.select();
+                        }
+                    }
                 }
             }
 
-            if (valueChanged && (this.value.length + 1) == defaults.maxlength) {
+            if (this.value.length == defaults.maxlength) {
                 $(this).trigger('autotab-next', defaults);
             }
 
-            return valueChanged;
+            return false;
         }).on('paste', function (e) {
             var defaults = getSettings(this);
 

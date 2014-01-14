@@ -1,3 +1,10 @@
+## 1.5.2
+
+Bug fixes:
+
+* refactoring caused filtering rules, like uppercase or lowercase, to not work correctly (#23)
+
+
 ## 1.5.1
 
 Bug fixes:
