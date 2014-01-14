@@ -1,0 +1,21 @@
+{
+    "name": "jquery.autotab",
+    "version": "1.5.2",
+    "description": "jQuery plugin that provides auto-tabbing and filtering on text fields in a form.",
+    "main": [ "./js/jquery.autotab.min.js" ],
+    "homepage": "https://github.com/Mathachew/jquery-autotab",
+    "dependencies" : {
+        "jquery" : ">= 1.7"
+    },
+    "keywords": [
+        "autotab",
+        "filter"
+    ],
+    "author" : {
+        "name" : "Matthew Miller",
+        "web"  : "https://github.com/Mathachew"
+    },
+    "license": [
+        "http://www.opensource.org/licenses/mit-license.php"
+    ]
+}
