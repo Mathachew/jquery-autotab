@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.5.2
+ * Autotab - jQuery plugin 1.5.3
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2013 Matthew Miller
@@ -349,15 +349,15 @@
                 }
             }
         }).on('keypress', function (e) {
-            var defaults = getSettings(this);
+            var defaults = getSettings(this),
+                keyCode = e.which || e.keyCode;
 
             // e.charCode == 0 indicates a special key has been pressed, which only Firefox triggers
-            if (!defaults || defaults.disabled || (settings.firefox && e.charCode === 0) || e.ctrlKey || e.altKey) {
+            if (!defaults || defaults.disabled || (settings.firefox && e.charCode === 0) || e.ctrlKey || e.altKey || keyCode == 13) {
                 return true;
             }
 
-            var keyCode = e.which || e.keyCode,
-                keyChar = String.fromCharCode(keyCode);
+            var keyChar = String.fromCharCode(keyCode);
 
             // Prevents auto tabbing when defaults.trigger is pressed
             if (defaults.trigger !== null && defaults.trigger.indexOf(keyChar) >= 0) {
