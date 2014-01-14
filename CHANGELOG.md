@@ -1,3 +1,10 @@
+## 1.5.3
+
+Bug fixes:
+
+* addresses an issue with forms not submitting from the on-screen keyboard (#22)
+
+
 ## 1.5.2
 
 Bug fixes:
