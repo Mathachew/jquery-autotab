@@ -1,3 +1,15 @@
+## 1.5.4
+
+Features
+
+* added a check to apply filtering only to text fields, as support for other input types varies and may not support selection, while preserving auto tabbing functionality
+
+Bug fixes:
+
+* fixes an issue with multiple characters appearing after typing one when applying a filter rule more than once
+* fixes an issue with maxLength and Firefox, which defaults to -1
+
+
 ## 1.5.3
 
 Bug fixes:
