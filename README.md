@@ -25,6 +25,7 @@ Autotab is a jQuery plugin that provides auto tabbing and filtering on text fiel
   * [Forced Auto Tabbing](#forced-auto-tabbing)
 * [Options](#options)
 * [Filter Formats](#filter-formats)
+* [Minify](#minify)
 * [Feedback](#feedback)
 * [Copyright and License](#copyright-and-license)
 
@@ -408,6 +409,11 @@ Autotab has several filter formats available, all passed into the `format` key. 
     </td>
   </tr>
 </table>
+
+
+## Minify
+
+Autotab uses the [samqode minifier](http://samqode.com/minifyj) (`simple` optimization) to create jquery.autotab.min.js.
 
 
 ## Feedback

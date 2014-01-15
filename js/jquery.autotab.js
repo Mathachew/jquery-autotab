@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.5.3
+ * Autotab - jQuery plugin 1.5.4
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2013 Matthew Miller
@@ -248,7 +248,7 @@
         var oldMaxlength = element.maxLength;
 
         // defaults.maxlength has not changed and maxlength was specified
-        if (defaults.maxlength == 2147483647 && oldMaxlength != 2147483647) {
+        if (defaults.maxlength == 2147483647 && oldMaxlength != 2147483647 && oldMaxlength != -1) {
             defaults.maxlength = oldMaxlength;
         }
         // defaults.maxlength overrides maxlength
@@ -261,7 +261,7 @@
             defaults.target = null;
         }
 
-        if (!settings.loaded) {
+        if (!defaults.loaded) {
             defaults.loaded = true;
             setSettings(element, defaults);
         }
@@ -353,7 +353,7 @@
                 keyCode = e.which || e.keyCode;
 
             // e.charCode == 0 indicates a special key has been pressed, which only Firefox triggers
-            if (!defaults || defaults.disabled || (settings.firefox && e.charCode === 0) || e.ctrlKey || e.altKey || keyCode == 13) {
+            if (!defaults || defaults.disabled || (settings.firefox && e.charCode === 0) || e.ctrlKey || e.altKey || keyCode == 13 || this.type != 'text') {
                 return true;
             }
 
