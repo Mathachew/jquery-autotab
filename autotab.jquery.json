@@ -27,6 +27,6 @@
     "homepage": "https://github.com/Mathachew/jquery-autotab",
     "docs": "https://github.com/Mathachew/jquery-autotab/blob/master/README.md",
     "dependencies": {
-        "jquery": ">=1.7 || >=2.0"
+        "jquery": ">=1.7"
     }
 }
