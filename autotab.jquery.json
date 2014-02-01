@@ -1,12 +1,12 @@
 {
     "name": "autotab",
     "title": "jQuery Autotab",
-    "description": "jQuery plugin that provides auto tabbing and filtering on text fields in a form.",
+    "description": "A jQuery plugin that provides auto tabbing and filtering on text fields in a form.",
     "keywords": [
         "filter",
         "autotab"
     ],
-    "version": "1.5.4",
+    "version": "1.5.5",
     "author": {
         "name": "Mathachew",
         "url": "https://github.com/Mathachew"
