@@ -3,7 +3,6 @@
 Bug fixes:
 
 * fixes a cursor position issue in IE6+ when replacing the value of a text box that is currently selected (#32)
-* fixes an issue with replacing one or more selected characters (but not all) in any browser
 
 
 ## 1.5.4
