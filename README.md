@@ -413,7 +413,7 @@ Autotab has several filter formats available, all passed into the `format` key. 
 
 ## Minify
 
-Autotab uses the [samqode minifier](http://samqode.com/minifyj) (`simple` optimization) to create jquery.autotab.min.js.
+Autotab uses the [samqode minifier](http://samqode.com/minifyjs) (`simple` optimization) to create jquery.autotab.min.js.
 
 
 ## Feedback

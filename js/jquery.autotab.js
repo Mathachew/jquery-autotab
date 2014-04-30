@@ -1,8 +1,8 @@
 /**
- * Autotab - jQuery plugin 1.5.4
+ * Autotab - jQuery plugin 1.6.0
  * https://github.com/Mathachew/jquery-autotab
  * 
- * Copyright (c) 2013 Matthew Miller
+ * Copyright (c) 2008, 2014 Matthew Miller
  * 
  * Licensed under the MIT licensing:
  *   http://www.opensource.org/licenses/mit-license.php
@@ -101,7 +101,14 @@
                 newOptions.previous = defaults.previous;
 
                 $.extend(defaults, newOptions);
-                setSettings(this[i], defaults);
+
+                if (!defaults.loaded) {
+                    defaults.disabled = true;
+                    autotabBind(this[i], newOptions);
+                }
+                else {
+                    setSettings(this[i], defaults);
+                }
             }
         }
         // Disable auto tab and filtering
@@ -353,7 +360,7 @@
                 keyCode = e.which || e.keyCode;
 
             // e.charCode == 0 indicates a special key has been pressed, which only Firefox triggers
-            if (!defaults || defaults.disabled || (settings.firefox && e.charCode === 0) || e.ctrlKey || e.altKey || keyCode == 13 || this.type != 'text') {
+            if (!defaults || defaults.disabled || (settings.firefox && e.charCode === 0) || e.ctrlKey || e.altKey || keyCode == 13 || (this.type != 'text' && this.type != 'password')) {
                 return true;
             }
 
@@ -411,28 +418,29 @@
                     setSettings(this, { changed: (this.value != defaults.originalValue) });
                 }
                 else {
-                    if (this.value.length == this.maxLength) {
+                    if (this.value.length == this.maxLength && start === end) {
                         $(this).trigger('autotab-next', defaults);
                         return false;
                     }
 
                     this.value = this.value.slice(0, start) + keyChar + this.value.slice(end);
                     setSettings(this, { changed: (this.value != defaults.originalValue) });
+                }
 
-                    // Prevents the cursor position from being set to the end of the text box
-                    if (this.value.length != defaults.maxlength) {
-                        start++;
+                // Prevents the cursor position from being set to the end of the text box
+                // This is called even if the text is fully selected and replaced due to an unexpected behavior in IE6 and up (#32)
+                if (this.value.length != defaults.maxlength) {
+                    start++;
 
-                        if (selectionType == 1) {
-                            this.selectionStart = this.selectionEnd = start;
-                        }
-                        else if (selectionType == 2) {
-                            var range = this.createTextRange();
-                            range.collapse(true);
-                            range.moveEnd('character', start);
-                            range.moveStart('character', start);
-                            range.select();
-                        }
+                    if (selectionType == 1) {
+                        this.selectionStart = this.selectionEnd = start;
+                    }
+                    else if (selectionType == 2) {
+                        var range = this.createTextRange();
+                        range.collapse(true);
+                        range.moveEnd('character', start);
+                        range.moveStart('character', start);
+                        range.select();
                     }
                 }
             }
