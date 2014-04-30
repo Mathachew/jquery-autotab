@@ -4,11 +4,11 @@
     <head>
         <title>jQuery Autotab Demo</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script src="js/jquery.autotab.js"></script>
         <script>
         $(function () {
-            $('input[type=text]').autotab();
+            $('input[type=text], input[type=password]').autotab();
             $('.number').autotab('filter', 'number');
             $('.ssn').autotab('filter', 'number');
             $('.text').autotab('filter', 'text');
@@ -41,6 +41,7 @@
             });
             $('.hexadecimal').autotab('filter', 'hexadecimal');
             $('.ip').autotab('filter', { format: 'number', trigger: '.' });
+            $('.pin').autotab('filter', { format: 'number' });
 
             $('#remove-autotab').on('click', function () {
                 $('input[type=text]').autotab('remove');
@@ -365,6 +366,21 @@ $('.hexadecimal').autotab('filter', 'hexadecimal');
                 </div>
                 <pre>
 $('.ip').autotab('filter', { format: 'number', trigger: '.' });
+</pre>
+            </div>
+
+            <hr />
+
+            <div>
+                <div class="example">
+                    <label for="pin1">Filtering and auto tabbing on password fields</label>
+
+                    <input type="password" id="pin1" class="pin" maxlength="3" size="4" />
+                    .
+                    <input type="password" id="pin2" class="pin" maxlength="3" size="4" />
+                </div>
+                <pre>
+$('.pin').autotab('filter', { format: 'number' });
 </pre>
             </div>
         </div>
