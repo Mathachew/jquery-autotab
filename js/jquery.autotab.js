@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.5.6
+ * Autotab - jQuery plugin 1.6
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2008, 2014 Matthew Miller
