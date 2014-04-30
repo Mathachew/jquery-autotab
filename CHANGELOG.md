@@ -1,13 +1,21 @@
-## 1.5.5
+## 1.6 (2014-04-30)
+
+Features:
+
+* restores the ability to apply a filter only (#36)
+* added support to filter and tab on password fields (#36)
+
+
+## 1.5.5 (2014-01-31)
 
 Bug fixes:
 
 * fixes a cursor position issue in IE6+ when replacing the value of a text box that is currently selected (#32)
 
 
-## 1.5.4
+## 1.5.4 (2014-01-15)
 
-Features
+Features:
 
 * added a check to apply filtering only to text fields, as support for other input types varies and may not support selection, while preserving auto tabbing functionality
 
@@ -17,28 +25,28 @@ Bug fixes:
 * fixes an issue with maxLength and Firefox, which defaults to -1
 
 
-## 1.5.3
+## 1.5.3 (2014-01-13)
 
 Bug fixes:
 
 * addresses an issue with forms not submitting from the on-screen keyboard (#22)
 
 
-## 1.5.2
+## 1.5.2 (2014-01-13)
 
 Bug fixes:
 
 * refactoring caused filtering rules, like uppercase or lowercase, to not work correctly (#23)
 
 
-## 1.5.1
+## 1.5.1 (2013-12-17)
 
 Bug fixes:
 
 * in Internet Explorer, reaching the max length caused the last character to appear in the target element after auto tabbing (#19)
 
 
-## 1.5
+## 1.5 (2013-12-12)
 
 Features:
 

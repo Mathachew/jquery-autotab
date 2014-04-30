@@ -1,8 +1,8 @@
 /**
- * Autotab - jQuery plugin 1.5.5
+ * Autotab - jQuery plugin 1.6.0
  * https://github.com/Mathachew/jquery-autotab
  * 
- * Copyright (c) 2013 Matthew Miller
+ * Copyright (c) 2008, 2014 Matthew Miller
  * 
  * Licensed under the MIT licensing:
  *   http://www.opensource.org/licenses/mit-license.php
@@ -101,7 +101,14 @@
                 newOptions.previous = defaults.previous;
 
                 $.extend(defaults, newOptions);
-                setSettings(this[i], defaults);
+
+                if (!defaults.loaded) {
+                    defaults.disabled = true;
+                    autotabBind(this[i], newOptions);
+                }
+                else {
+                    setSettings(this[i], defaults);
+                }
             }
         }
         // Disable auto tab and filtering
@@ -353,7 +360,7 @@
                 keyCode = e.which || e.keyCode;
 
             // e.charCode == 0 indicates a special key has been pressed, which only Firefox triggers
-            if (!defaults || defaults.disabled || (settings.firefox && e.charCode === 0) || e.ctrlKey || e.altKey || keyCode == 13 || this.type != 'text') {
+            if (!defaults || defaults.disabled || (settings.firefox && e.charCode === 0) || e.ctrlKey || e.altKey || keyCode == 13 || (this.type != 'text' && this.type != 'password')) {
                 return true;
             }
 
