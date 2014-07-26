@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.6
+ * Autotab - jQuery plugin 1.7
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2008, 2014 Matthew Miller
@@ -17,8 +17,6 @@
             firefox: (typeof InstallTrigger !== 'undefined')
         };
 
-    // Native get/setAttribute methods are much faster than $.data, so $.data is used for objects only: http://jsperf.com/dataset-vs-jquery-data/4
-    // When removing then resetting auto tab, storing an object resulted in overwritten values, leading to this implementation
     var setSettings = function (e, settings) {
         if (settings === null || typeof settings === 'undefined') {
             return;
@@ -43,11 +41,15 @@
             previous: null,
             trigger: null,
             originalValue: '',
-            changed: false
+            changed: false,
+            editable: (e.type == 'text' || e.type == 'password' || e.type == 'textarea'),
+            tabOnSelect: false
         };
 
         for (var key in settings) {
-            settings[key] = $(e).data('autotab-' + key) || settings[key];
+            if (typeof $(e).data('autotab-' + key) !== 'undefined') {
+                settings[key] = $(e).data('autotab-' + key);
+            }
         }
 
         // Save settings on first run
@@ -62,23 +64,40 @@
         return settings;
     };
 
-    // The 1ms timeouts allow for keypress events to complete in case a
-    // custom function or exterior method calls for a manual auto tab
-    $.autotab = {
-        next: function () {
-            var e = $(document.activeElement);
+    var queryObject = function (e) {
+        return (typeof e !== 'undefined' && (typeof e === 'string' || !(e instanceof jQuery)));
+    };
 
-            if (e.length) {
-                e.trigger('autotab-next');
-            }
-        },
-        previous: function () {
-            var e = $(document.activeElement);
-
-            if (e.length) {
-                e.trigger('autotab-previous');
-            }
+    $.autotab = function (options) {
+        if (typeof options !== 'object') {
+            options = {};
         }
+
+        $(':input').autotab(options);
+    };
+
+    $.autotab.next = function () {
+        var e = $(document.activeElement);
+
+        if (e.length) {
+            e.trigger('autotab-next');
+        }
+    };
+
+    $.autotab.previous = function () {
+        var e = $(document.activeElement);
+
+        if (e.length) {
+            e.trigger('autotab-previous');
+        }
+    };
+
+    $.autotab.remove = function (e) {
+        queryObject(e) ? $(e).autotab('remove') : $(':input').autotab('remove');
+    };
+
+    $.autotab.restore = function (e) {
+        queryObject(e) ? $(e).autotab('restore') : $(':input').autotab('restore');
     };
 
     $.fn.autotab = function (method, options) {
@@ -86,14 +105,19 @@
             return this;
         }
 
+        // Remove hidden fields since tabbing backwards is supported on different form elements
+        var filtered = $.grep(this, function (e, i) {
+            return e.type != 'hidden';
+        });
+
         // Apply filter options
         if (method == 'filter') {
             if (typeof options === 'string' || typeof options === 'function') {
                 options = { format: options };
             }
 
-            for (var i = 0, length = this.length; i < length; i++) {
-                var defaults = getSettings(this[i]),
+            for (var i = 0, length = filtered.length; i < length; i++) {
+                var defaults = getSettings(filtered[i]),
                     newOptions = options;
 
                 // Retain the established target/previous values as this area is for filtering only
@@ -104,31 +128,31 @@
 
                 if (!defaults.loaded) {
                     defaults.disabled = true;
-                    autotabBind(this[i], newOptions);
+                    autotabBind(filtered[i], newOptions);
                 }
                 else {
-                    setSettings(this[i], defaults);
+                    setSettings(filtered[i], defaults);
                 }
             }
         }
         // Disable auto tab and filtering
         else if (method == 'remove' || method == 'destroy' || method == 'disable') {
-            for (var i = 0, length = this.length; i < length; i++) {
-                var defaults = getSettings(this[i]);
+            for (var i = 0, length = filtered.length; i < length; i++) {
+                var defaults = getSettings(filtered[i]);
 
                 defaults.disabled = true;
 
-                setSettings(this[i], defaults);
+                setSettings(filtered[i], defaults);
             }
         }
         // Re-enable auto tab and filtering
         else if (method == 'restore' || method == 'enable') {
-            for (var i = 0, length = this.length; i < length; i++) {
-                var defaults = getSettings(this[i]);
+            for (var i = 0, length = filtered.length; i < length; i++) {
+                var defaults = getSettings(filtered[i]);
 
                 defaults.disabled = false;
 
-                setSettings(this[i], defaults);
+                setSettings(filtered[i], defaults);
             }
         }
         else {
@@ -143,30 +167,30 @@
             }
 
             // Bind key events to element(s) passed
-            if (this.length > 1) {
-                for (var i = 0, length = this.length; i < length; i++) {
+            if (filtered.length > 1) {
+                for (var i = 0, length = filtered.length; i < length; i++) {
                     var n = i + 1,
                         p = i - 1,
                         newOptions = options;
 
                     if (i > 0 && n < length) {
-                        newOptions.target = this[n];
-                        newOptions.previous = this[p];
+                        newOptions.target = filtered[n];
+                        newOptions.previous = filtered[p];
                     }
                     else if (i > 0) {
                         newOptions.target = null;
-                        newOptions.previous = this[p];
+                        newOptions.previous = filtered[p];
                     }
                     else {
-                        newOptions.target = this[n];
+                        newOptions.target = filtered[n];
                         newOptions.previous = null;
                     }
 
-                    autotabBind(this[i], newOptions);
+                    autotabBind(filtered[i], newOptions);
                 }
             }
             else {
-                autotabBind(this[0], options);
+                autotabBind(filtered[0], options);
             }
         }
 
@@ -244,15 +268,19 @@
         $.extend(defaults, options);
 
         // Sets targets to element based on the name or ID passed if they are not currently objects
-        if (typeof defaults.target === 'string' || !(defaults.target instanceof jQuery)) {
+        if (queryObject(defaults.target)) {
             defaults.target = $(defaults.target);
         }
 
-        if (typeof defaults.previous === 'string' || !(defaults.previous instanceof jQuery)) {
+        if (queryObject(defaults.previous)) {
             defaults.previous = $(defaults.previous);
         }
 
         var oldMaxlength = element.maxLength;
+
+        if (typeof element.maxLength === 'undefined' && element.type == 'textarea') {
+            oldMaxlength = element.maxLength = element.getAttribute('maxlength');
+        }
 
         // defaults.maxlength has not changed and maxlength was specified
         if (defaults.maxlength == 2147483647 && oldMaxlength != 2147483647 && oldMaxlength != -1) {
@@ -277,6 +305,19 @@
             return;
         }
 
+        // Add a change event to select lists only so that we can auto tab when a value is selected
+        if (element.type == 'select-one') {
+            $(element).on('change', function (e) {
+                var defaults = getSettings(this);
+
+                if (defaults.tabOnSelect) {
+                    $(this).trigger('autotab-next');
+                }
+            });
+        }
+
+        // The 1ms timeouts allow for keypress events to complete in case a
+        // custom function or exterior method calls for a manual auto tab
         $(element).on('autotab-next', function (event, defaults) {
             var self = this;
             setTimeout(function () {
@@ -284,10 +325,20 @@
                     defaults = getSettings(self);
                 }
 
-                if (!defaults.disabled && defaults.target.length) {
+                var target = defaults.target;
+
+                if (!defaults.disabled && target.length) {
                     // Using focus on iOS devices is a pain, so use the browser's next/previous buttons to proceed
                     if (!settings.iOS) {
-                        defaults.target.focus().select();
+
+                        // Field is disabled, so tab to next element
+                        if (target.prop('disabled')) {
+                            target.trigger('autotab-next');
+                        }
+                        else {
+                            target.focus().select();
+                        }
+
                         settings.focusChange = new Date();
                     }
                 }
@@ -304,7 +355,11 @@
                 if (!defaults.disabled && previous.length) {
                     var value = previous.val();
 
-                    if (value.length) {
+                    // Field is disabled, so tab to previous element
+                    if (previous.prop('disabled')) {
+                        previous.trigger('autotab-previous');
+                    }
+                    else if (value.length && previous.data('autotab-editable')) {
                         previous.focus().val(value.substring(0, value.length - 1));
                         setSettings(previous, { changed: true });
                     }
@@ -336,8 +391,13 @@
             // Go to the previous element when backspace
             // is pressed in an empty input field
             if (keyCode == 8) {
-                if (this.value.length === 0 && defaults.previous.length) {
+                if (!defaults.editable || this.value.length === 0) {
                     $(this).trigger('autotab-previous', defaults);
+
+                    // Prevent the browser from of navigating to the previous page
+                    if (!defaults.editable) {
+                        return false;
+                    }
                 }
                 else {
                     setSettings(this, { changed: (this.value != defaults.originalValue) });
@@ -360,7 +420,7 @@
                 keyCode = e.which || e.keyCode;
 
             // e.charCode == 0 indicates a special key has been pressed, which only Firefox triggers
-            if (!defaults || defaults.disabled || (settings.firefox && e.charCode === 0) || e.ctrlKey || e.altKey || keyCode == 13 || (this.type != 'text' && this.type != 'password')) {
+            if (!defaults || defaults.disabled || (settings.firefox && e.charCode === 0) || e.ctrlKey || e.altKey || keyCode == 13 || (this.type != 'text' && this.type != 'password' && this.type != 'textarea') || this.disabled) {
                 return true;
             }
 
@@ -511,7 +571,7 @@
         });
     };
 
-    // Backwards compatibility
+    // Deprecated, here for backwards compatibility
     $.fn.autotab_magic = function (focus) {
         $(this).autotab();
     };
