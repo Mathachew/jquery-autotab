@@ -1,3 +1,17 @@
+## 1.7 (2014-07-22)
+
+Features:
+
+* added support for additional fields and removed hidden fields from the selected elements, including maxlength support for textarea (#14)
+* added option to auto tab on single value select lists when selecting a value
+* added global methods to setup, remove and restore Autotab
+* elements passed to Autotab now filter out hidden form fields
+
+Bug fixes:
+
+* fixes an issue with tabbing to a previous field that is disabled, resulting in the value being modified (#47)
+
+
 ## 1.6 (2014-04-30)
 
 Features:

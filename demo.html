@@ -4,13 +4,12 @@
     <head>
         <title>jQuery Autotab Demo</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="js/jquery.autotab.js"></script>
         <script>
         $(function () {
-            $('input[type=text], input[type=password]').autotab();
+            $.autotab({ tabOnSelect: true });
             $('.number').autotab('filter', 'number');
-            $('.ssn').autotab('filter', 'number');
             $('.text').autotab('filter', 'text');
             $('.alpha').autotab('filter', 'alpha');
             $('.alphanumeric').autotab('filter', { format: 'alphanumeric', uppercase: true });
@@ -41,16 +40,19 @@
             });
             $('.hexadecimal').autotab('filter', 'hexadecimal');
             $('.ip').autotab('filter', { format: 'number', trigger: '.' });
-            $('.pin').autotab('filter', { format: 'number' });
+            $('.pin').autotab('filter', 'number');
 
             $('#remove-autotab').on('click', function () {
-                $('input[type=text]').autotab('remove');
+                $.autotab.remove();
                 $('#autotab-status span').removeClass('on').addClass('off').text('Off');
             });
 
             $('#restore-autotab').on('click', function () {
-                $('input[type=text]').autotab('restore');
+                $.autotab.restore();
                 $('#autotab-status span').removeClass('off').addClass('on').text('On');
+            });
+
+            $('').on('click', function () {
             });
         });
         </script>
@@ -104,7 +106,7 @@
             display: inline-block;
             font-size: 14px;
             margin: 10px 0;
-            outline: none;
+            /*outline: none;*/
             padding: 6px 12px;
             position: relative;
             text-align: center;
@@ -129,7 +131,11 @@
     <body>
         <div id="container">
             <h1>jQuery Autotab Demo</h1>
-            <p>Autotab's documentation can be found in <a href="https://github.com/Mathachew/jquery-autotab/blob/master/README.md">ReadMe.md</a> on GitHub.</p>
+            <p>Autotab's full documentation can be found in <a href="https://github.com/Mathachew/jquery-autotab/blob/master/README.md">ReadMe.md</a> on GitHub.</p>
+
+            <hr />
+
+            <p><strong>Note:</strong> For the purposes of this demo, I am calling <code>$.autotab()</code> to initialize the auto tabbing order.</p>
 
             <hr />
 
@@ -154,44 +160,7 @@
                     <input type="text" id="number3" class="number" maxlength="4" size="5" />
                 </div>
                 <pre>
-// Example 1
-$('input[type=text]').autotab();
 $('.number').autotab('filter', 'number');
-
-// Example 2
-$('.number').autotab();
-$('.number').autotab('filter', 'number');
-
-// Example 3
-$('#number1').autotab({ format: 'number', target: '#number2' });
-$('#number2').autotab({ format: 'number', target: '#number3', previous: '#number1' });
-$('#number3').autotab({ format: 'number', target: '#ssn1', previous: '#number2' });
-
-// Example 4
-// Note: Applies number formatting to all elements, but the last element lacks a target
-$('.number').autotab({ format: 'number' });
-$('#number3').autotab({ target: '#ssn1' });
-</pre>
-            </div>
-
-            <div>
-                <p>Examples from this point on will assume <code>$('input[type=text]').autotab()</code> is called.</p>
-            </div>
-
-            <hr />
-
-            <div>
-                <div class="example">
-                    <label for="ssn1">Social Security Number</label>
-
-                    <input type="text" id="ssn1" class="ssn" maxlength="3" size="3" />
-                    -
-                    <input type="text" id="ssn2" class="ssn" maxlength="2" size="3" />
-                    -
-                    <input type="text" id="ssn3" class="ssn" maxlength="4" size="5" />
-                </div>
-                <pre>
-$('.ssn').autotab('filter', 'number');
 </pre>
             </div>
 
@@ -258,28 +227,6 @@ $('.alphanumeric').autotab('filter', { format: 'alphanumeric', uppercase: true }
 
             <div>
                 <div class="example">
-                    <label for="all1">Any and all characters</label>
-
-                    <input type="text" id="all1" class="all" maxlength="5" size="4" />
-                    -
-                    <input type="text" id="all2" class="all" maxlength="5" size="4" />
-                    -
-                    <input type="text" id="all3" class="all" maxlength="5" size="4" />
-                    -
-                    <input type="text" id="all4" class="all" maxlength="5" size="4" />
-                    -
-                    <input type="text" id="all5" class="all" maxlength="5" size="4" />
-                </div>
-                <pre>
-// Note: This call is not necessary as 'all' is the default format
-$('.all').autotab('filter', 'all');
-</pre>
-            </div>
-
-            <hr />
-
-            <div>
-                <div class="example">
                     <label for="regex">Regular Expression (Allows numbers and periods)</label>
                     <input type="text" id="regex" maxlength="15" size="13" />
                 </div>
@@ -292,7 +239,7 @@ $('#regex').autotab({ format: 'custom', pattern: '[^0-9\.]' });
 
             <div>
                 <div class="example">
-                    <label for="function">Custom Function (Range of 1-12, even if the second digit is greater than 2)</label>
+                    <label for="function">Custom Function that forces a number range of 1 to 12</label>
                     <input type="text" id="function" maxlength="2" size="3" />
                 </div>
                 <pre>
@@ -380,7 +327,39 @@ $('.ip').autotab('filter', { format: 'number', trigger: '.' });
                     <input type="password" id="pin2" class="pin" maxlength="3" size="4" />
                 </div>
                 <pre>
-$('.pin').autotab('filter', { format: 'number' });
+$('.pin').autotab('filter', 'number');
+</pre>
+            </div>
+
+            <hr />
+
+            <div>
+                <div class="example">
+                    <label for="all1">Any and all characters with tabbing support on non-text form fields. Textarea will auto tab when the defined <code>maxlength</code> is reached, disabled fields are skipped entirely, and the select list will auto tab when a value is selected. Auto tabbing on select lists only applies for single select and is configurable using <code>tabOnSelect</code>.</label>
+
+                    <input type="text" id="all1" class="all" maxlength="5" size="4" />
+                    <input type="text" id="all2" class="all" maxlength="3" size="1" disabled="disabled" value="zxy" />
+                    <input type="text" id="all3" class="all" maxlength="5" size="4" />
+                    <br />
+                    <button value="button">Standard Button</button> <input type="submit" value="Submit Button" /> <button value="button" disabled="disabled">Disabled Button</button> 
+                    <br />
+                    <select>
+                        <option>First</option>
+                        <option>Second</option>
+                        <option>Third</option>
+                    </select>
+                    <br />
+                    <input type="radio" name="radio" />
+                    <br />
+                    <input type="checkbox" />
+                    <br />
+                    <textarea cols="20" rows="2" maxlength="10" class="all"></textarea>
+                    <br />
+                    <input type="text" id="all4" class="all" maxlength="5" size="4" />
+                </div>
+                <pre>
+// Note: This call is not necessary as 'all' is the default format
+$('.all').autotab('filter', 'all');
 </pre>
             </div>
         </div>

@@ -22,7 +22,7 @@ Autotab is a jQuery plugin that provides auto tabbing and filtering on text fiel
     * [Examples](#examples-1)
   * [Filtering](#filtering)
     * [Examples](#examples-2)
-  * [Forced Auto Tabbing](#forced-auto-tabbing)
+  * [Global Methods](#global-methods)
 * [Options](#options)
 * [Filter Formats](#filter-formats)
 * [Minify](#minify)
@@ -237,7 +237,7 @@ Manually defines number filtering via `data-autotab-format`. In this example, `$
 Other random JavaScript examples
 
 ```js
-$('input[type=text]').autotab();
+$(':input').autotab();
 $('#username').autotab({ format: 'alphanumeric', target: '#password' });
 $('#password').autotab({ previous: '#username', target: '#confirm' });
 $('#product-key').autotab('filter', { format: 'alphanumeric', uppercase: true });
@@ -248,20 +248,65 @@ $('.ipv6').autotab('filter', 'hexadecimal');
 ```
 
 
-### Forced Auto Tabbing
+### Global Methods
 
-Autotab comes with two functions that can be used to force an auto tab from a field if a criteria is met.
-
-__Note__: These methods are only useful if an element setup with Autotab has focus.
+Autotab comes with several global methods, which are probably most useful in edge cases.
 
 <table width="100%">
   <tr>
+    <td width="30%" valign="top">$.autotab()</td>
+    <td>Initializes Autotab on all elements matching the `:input` selector.</td>
+  </tr>
+  <tr>
+    <td valign="top">$.autotab(object)</td>
+    <td><strong>object</strong>: Applies the specified options to all matched elements.
+    </td>
+  </tr>
+</table>
+<table width="100%">
+  <tr>
     <td width="30%" valign="top">$.autotab.next()</td>
-    <td>Triggers the `autotab-next` event, which sets the focus on the target element, if it exists.</td>
+    <td>
+      Triggers the `autotab-next` event, which sets the focus on the target element, if it exists.
+      <br />
+      <strong>Note</strong>: This method is only useful if an element setup with Autotab has focus.
+    </td>
   </tr>
   <tr>
     <td valign="top">$.autotab.previous()</td>
-    <td>Triggers the `autotab-previous` event, which sets the focus on the previous element, if it exists.</td>
+    <td>
+      Triggers the `autotab-previous` event, which sets the focus on the previous element, if it exists.
+      <br />
+      <strong>Note</strong>: This method is only useful if an element setup with Autotab has focus.
+    </td>
+  </tr>
+</table>
+<table width="100%">
+  <tr>
+    <td width="30%" valign="top">$.autotab.remove()</td>
+    <td>Removes Autotab from all matched elements.</td>
+  </tr>
+  <tr>
+    <td valign="top">$.autotab.remove(string)</td>
+    <td><strong>string</strong>: A selector identifying the matched element.</td>
+  </tr>
+  <tr>
+    <td valign="top">$.autotab.remove(object)</td>
+    <td><strong>object</strong>: Applies the removal to all matched elements.</td>
+  </tr>
+</table>
+<table width="100%">
+  <tr>
+    <td width="30%" valign="top">$.autotab.restore()</td>
+    <td>Restores Autotab to all matched elements.</td>
+  </tr>
+  <tr>
+    <td valign="top">$.autotab.restore(string)</td>
+    <td><strong>string</strong>: A selector identifying the matched element.</td>
+  </tr>
+  <tr>
+    <td valign="top">$.autotab.restore(object)</td>
+    <td><strong>object</strong>: Applies restoration to all matched elements.</td>
   </tr>
 </table>
 
@@ -278,7 +323,8 @@ var options = {
     maxlength: integer,
     target: string|element,
     previous: string|element,
-    trigger: string|array
+    trigger: string|array,
+    tabOnSelect: boolean
 };
 ```
 <table width="100%">
@@ -358,6 +404,12 @@ var options = {
     </td>
     </td>
   </tr>
+  <tr>
+    <td valign="top">tabOnSelect</td>
+    <td>
+      <strong>boolean</strong>: Adds auto tabbing to all matched single value select lists.
+    </td>
+  </tr>
 </table>
 
 
@@ -413,7 +465,7 @@ Autotab has several filter formats available, all passed into the `format` key. 
 
 ## Minify
 
-Autotab uses the [samqode minifier](http://samqode.com/minifyjs) (`simple` optimization) to create jquery.autotab.min.js.
+Autotab uses the [Closure Compiler](http://closure-compiler.appspot.com/) (`simple` optimization) to create jquery.autotab.min.js.
 
 
 ## Feedback
@@ -424,6 +476,6 @@ You can also reach out to me on twitter: [@mathachew](http://www.twitter.com/mat
 
 ## Copyright and license
 
-&copy; 2013 Matthew Miller
+&copy; 2014 Matthew Miller
 
 Licensed under the MIT licensing: http://www.opensource.org/licenses/mit-license.php
