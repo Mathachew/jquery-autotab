@@ -255,7 +255,7 @@ Autotab comes with several global methods, which are probably most useful in edg
 <table width="100%">
   <tr>
     <td width="30%" valign="top">$.autotab()</td>
-    <td>Initializes Autotab on all elements matching the `:input` selector.</td>
+    <td>Initializes Autotab on all elements matching the <code>:input</code> selector.</td>
   </tr>
   <tr>
     <td valign="top">$.autotab(object)</td>
