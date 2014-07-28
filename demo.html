@@ -51,9 +51,6 @@
                 $.autotab.restore();
                 $('#autotab-status span').removeClass('off').addClass('on').text('On');
             });
-
-            $('').on('click', function () {
-            });
         });
         </script>
 
@@ -135,7 +132,7 @@
 
             <hr />
 
-            <p><strong>Note:</strong> For the purposes of this demo, I am calling <code>$.autotab()</code> to initialize the auto tabbing order.</p>
+            <p><strong>Note:</strong> For the purposes of this demo, I am calling <code>$.autotab({ tabOnSelect: true });</code> to initialize the auto tabbing order.</p>
 
             <hr />
 
