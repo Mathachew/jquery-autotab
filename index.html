@@ -3,7 +3,7 @@
 <html>
     <head>
         <title>jQuery Autotab Demo</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="js/jquery.autotab.js"></script>
         <script>
@@ -130,11 +130,11 @@
             <h1>jQuery Autotab Demo</h1>
             <p>Autotab's full documentation can be found in <a href="https://github.com/Mathachew/jquery-autotab/blob/master/README.md">ReadMe.md</a> on GitHub.</p>
 
-            <hr />
+            <hr>
 
             <p><strong>Note:</strong> For the purposes of this demo, I am calling <code>$.autotab({ tabOnSelect: true });</code> to initialize the auto tabbing order.</p>
 
-            <hr />
+            <hr>
 
             <div>
                 <p>Use the buttons below to turn Autotab on or off. Turning Autotab off will remove both auto tabbing and filtering.</p>
@@ -144,100 +144,100 @@
                 <span id="autotab-status">Autotab status: <span class="on">On</span></span>
             </div>
 
-            <hr />
+            <hr>
 
             <div>
                 <div class="example">
                     <label for="number1">Phone Number</label>
 
-                    <input type="text" id="number1" class="number" maxlength="3" size="3" />
+                    <input type="text" id="number1" class="number" maxlength="3" size="3">
                     -
-                    <input type="text" id="number2" class="number" maxlength="3" size="3" />
+                    <input type="text" id="number2" class="number" maxlength="3" size="3">
                     -
-                    <input type="text" id="number3" class="number" maxlength="4" size="5" />
+                    <input type="text" id="number3" class="number" maxlength="4" size="5">
                 </div>
                 <pre>
 $('.number').autotab('filter', 'number');
 </pre>
             </div>
 
-            <hr />
+            <hr>
 
             <div>
                 <div class="example">
                     <label for="text1">Text characters only</label>
 
-                    <input type="text" id="text1" class="text" maxlength="5" size="4" />
+                    <input type="text" id="text1" class="text" maxlength="5" size="4">
                     -
-                    <input type="text" id="text2" class="text" maxlength="4" size="4" />
+                    <input type="text" id="text2" class="text" maxlength="4" size="4">
                     -
-                    <input type="text" id="text3" class="text" maxlength="5" size="4" />
+                    <input type="text" id="text3" class="text" maxlength="5" size="4">
                 </div>
                 <pre>
 $('.text').autotab('filter', 'text');
 </pre>
             </div>
 
-            <hr />
+            <hr>
 
             <div>
                 <div class="example">
                     <label for="alpha1">Alpha only</label>
 
-                    <input type="text" id="alpha1" class="alpha" maxlength="5" size="4" />
+                    <input type="text" id="alpha1" class="alpha" maxlength="5" size="4">
                     -
-                    <input type="text" id="alpha2" class="alpha" maxlength="5" size="4" />
+                    <input type="text" id="alpha2" class="alpha" maxlength="5" size="4">
                     -
-                    <input type="text" id="alpha3" class="alpha" maxlength="5" size="4" />
+                    <input type="text" id="alpha3" class="alpha" maxlength="5" size="4">
                     -
-                    <input type="text" id="alpha4" class="alpha" maxlength="5" size="4" />
+                    <input type="text" id="alpha4" class="alpha" maxlength="5" size="4">
                     -
-                    <input type="text" id="alpha5" class="alpha" maxlength="5" size="4" />
+                    <input type="text" id="alpha5" class="alpha" maxlength="5" size="4">
                 </div>
                 <pre>
 $('.alpha').autotab('filter', 'alpha');
 </pre>
             </div>
 
-            <hr />
+            <hr>
 
             <div>
                 <div class="example">
                     <label for="alphanumeric1">Uppercase letters and numbers</label>
 
-                    <input type="text" id="alphanumeric1" class="alphanumeric" maxlength="5" size="4" />
+                    <input type="text" id="alphanumeric1" class="alphanumeric" maxlength="5" size="4">
                     -
-                    <input type="text" id="alphanumeric2" class="alphanumeric" maxlength="5" size="4" />
+                    <input type="text" id="alphanumeric2" class="alphanumeric" maxlength="5" size="4">
                     -
-                    <input type="text" id="alphanumeric3" class="alphanumeric" maxlength="5" size="4" />
+                    <input type="text" id="alphanumeric3" class="alphanumeric" maxlength="5" size="4">
                     -
-                    <input type="text" id="alphanumeric4" class="alphanumeric" maxlength="5" size="4" />
+                    <input type="text" id="alphanumeric4" class="alphanumeric" maxlength="5" size="4">
                     -
-                    <input type="text" id="alphanumeric5" class="alphanumeric" maxlength="5" size="4" />
+                    <input type="text" id="alphanumeric5" class="alphanumeric" maxlength="5" size="4">
                 </div>
                 <pre>
 $('.alphanumeric').autotab('filter', { format: 'alphanumeric', uppercase: true });
 </pre>
             </div>
 
-            <hr />
+            <hr>
 
             <div>
                 <div class="example">
                     <label for="regex">Regular Expression (Allows numbers and periods)</label>
-                    <input type="text" id="regex" maxlength="15" size="13" />
+                    <input type="text" id="regex" maxlength="15" size="13">
                 </div>
                 <pre>
 $('#regex').autotab({ format: 'custom', pattern: '[^0-9\.]' });
 </pre>
             </div>
 
-            <hr />
+            <hr>
 
             <div>
                 <div class="example">
                     <label for="function">Custom Function that forces a number range of 1 to 12</label>
-                    <input type="text" id="function" maxlength="2" size="3" />
+                    <input type="text" id="function" maxlength="2" size="3">
                 </div>
                 <pre>
 $('#function').autotab(function (value, element) {
@@ -267,92 +267,92 @@ $('#function').autotab(function (value, element) {
 </pre>
             </div>
 
-            <hr />
+            <hr>
 
             <div>
                 <div class="example">
                     <label for="regex">Hexadecimal (Allows numbers, a-f, and A-F)</label>
 
-                    <input type="text" id="hexadecimal1" class="hexadecimal" maxlength="4" size="3" />
+                    <input type="text" id="hexadecimal1" class="hexadecimal" maxlength="4" size="3">
                     :
-                    <input type="text" id="hexadecimal2" class="hexadecimal" maxlength="4" size="3" />
+                    <input type="text" id="hexadecimal2" class="hexadecimal" maxlength="4" size="3">
                     :
-                    <input type="text" id="hexadecimal3" class="hexadecimal" maxlength="4" size="3" />
+                    <input type="text" id="hexadecimal3" class="hexadecimal" maxlength="4" size="3">
                     :
-                    <input type="text" id="hexadecimal4" class="hexadecimal" maxlength="4" size="3" />
+                    <input type="text" id="hexadecimal4" class="hexadecimal" maxlength="4" size="3">
                     :
-                    <input type="text" id="hexadecimal5" class="hexadecimal" maxlength="4" size="3" />
+                    <input type="text" id="hexadecimal5" class="hexadecimal" maxlength="4" size="3">
                     :
-                    <input type="text" id="hexadecimal6" class="hexadecimal" maxlength="4" size="3" />
+                    <input type="text" id="hexadecimal6" class="hexadecimal" maxlength="4" size="3">
                     :
-                    <input type="text" id="hexadecimal7" class="hexadecimal" maxlength="4" size="3" />
+                    <input type="text" id="hexadecimal7" class="hexadecimal" maxlength="4" size="3">
                     :
-                    <input type="text" id="hexadecimal8" class="hexadecimal" maxlength="4" size="3" />
+                    <input type="text" id="hexadecimal8" class="hexadecimal" maxlength="4" size="3">
                 </div>
                 <pre>
 $('.hexadecimal').autotab('filter', 'hexadecimal');
 </pre>
             </div>
 
-            <hr />
+            <hr>
 
             <div>
                 <div class="example">
                     <label for="ip1">Numbers only with support for auto tabbing on periods</label>
 
-                    <input type="text" id="ip1" class="ip" maxlength="3" size="4" />
+                    <input type="text" id="ip1" class="ip" maxlength="3" size="4">
                     .
-                    <input type="text" id="ip2" class="ip" maxlength="3" size="4" />
+                    <input type="text" id="ip2" class="ip" maxlength="3" size="4">
                     .
-                    <input type="text" id="ip3" class="ip" maxlength="3" size="4" />
+                    <input type="text" id="ip3" class="ip" maxlength="3" size="4">
                     .
-                    <input type="text" id="ip4" class="ip" maxlength="3" size="4" />
+                    <input type="text" id="ip4" class="ip" maxlength="3" size="4">
                 </div>
                 <pre>
 $('.ip').autotab('filter', { format: 'number', trigger: '.' });
 </pre>
             </div>
 
-            <hr />
+            <hr>
 
             <div>
                 <div class="example">
                     <label for="pin1">Filtering and auto tabbing on password fields</label>
 
-                    <input type="password" id="pin1" class="pin" maxlength="3" size="4" />
+                    <input type="password" id="pin1" class="pin" maxlength="3" size="4">
                     .
-                    <input type="password" id="pin2" class="pin" maxlength="3" size="4" />
+                    <input type="password" id="pin2" class="pin" maxlength="3" size="4">
                 </div>
                 <pre>
 $('.pin').autotab('filter', 'number');
 </pre>
             </div>
 
-            <hr />
+            <hr>
 
             <div>
                 <div class="example">
                     <label for="all1">Any and all characters with tabbing support on non-text form fields. Textarea will auto tab when the defined <code>maxlength</code> is reached, disabled fields are skipped entirely, and the select list will auto tab when a value is selected. Auto tabbing on select lists only applies for single select and is configurable using <code>tabOnSelect</code>.</label>
 
-                    <input type="text" id="all1" class="all" maxlength="5" size="4" />
-                    <input type="text" id="all2" class="all" maxlength="3" size="1" disabled="disabled" value="zxy" />
-                    <input type="text" id="all3" class="all" maxlength="5" size="4" />
-                    <br />
-                    <button value="button">Standard Button</button> <input type="submit" value="Submit Button" /> <button value="button" disabled="disabled">Disabled Button</button> 
-                    <br />
+                    <input type="text" id="all1" class="all" maxlength="5" size="4">
+                    <input type="text" id="all2" class="all" maxlength="3" size="1" disabled="disabled" value="zxy">
+                    <input type="text" id="all3" class="all" maxlength="5" size="4">
+                    <br>
+                    <button value="button">Standard Button</button> <input type="submit" value="Submit Button"> <button value="button" disabled="disabled">Disabled Button</button> 
+                    <br>
                     <select>
                         <option>First</option>
                         <option>Second</option>
                         <option>Third</option>
                     </select>
-                    <br />
-                    <input type="radio" name="radio" />
-                    <br />
-                    <input type="checkbox" />
-                    <br />
+                    <br>
+                    <input type="radio" name="radio">
+                    <br>
+                    <input type="checkbox">
+                    <br>
                     <textarea cols="20" rows="2" maxlength="10" class="all"></textarea>
-                    <br />
-                    <input type="text" id="all4" class="all" maxlength="5" size="4" />
+                    <br>
+                    <input type="text" id="all4" class="all" maxlength="5" size="4">
                 </div>
                 <pre>
 // Note: This call is not necessary as 'all' is the default format
