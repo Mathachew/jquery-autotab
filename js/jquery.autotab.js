@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.7
+ * Autotab - jQuery plugin 1.7.1
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2008, 2014 Matthew Miller
@@ -573,7 +573,7 @@
 
     // Deprecated, here for backwards compatibility
     $.fn.autotab_magic = function (focus) {
-        $(this).autotab();
+        return $(this).autotab();
     };
     $.fn.autotab_filter = function (options) {
         var defaults = {};
@@ -585,7 +585,7 @@
             $.extend(defaults, options);
         }
 
-        $(this).autotab('filter', defaults);
+        return $(this).autotab('filter', defaults);
     };
 
 })(jQuery);

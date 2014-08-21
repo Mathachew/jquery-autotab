@@ -1,3 +1,10 @@
+## 1.7.1 (2014-08-21)
+
+Bug fixes:
+
+* fixes an issue when using deprecated methods `autotab_magic` and `autotab_filter` in a method chain
+
+
 ## 1.7 (2014-07-26)
 
 Features:
