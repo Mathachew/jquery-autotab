@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.7.1
+ * Autotab - jQuery plugin 1.7.2
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2008, 2014 Matthew Miller
@@ -391,17 +391,18 @@
             // Go to the previous element when backspace
             // is pressed in an empty input field
             if (keyCode == 8) {
-                if (!defaults.editable || this.value.length === 0) {
+                // Prevent the browser from of navigating to the previous page
+                if (this.type === 'select-one' || this.type === 'checkbox' || this.type === 'radio' || this.type === 'button' || this.type === 'submit' || this.type === 'range') {
                     $(this).trigger('autotab-previous', defaults);
+                    return false;
+                }
 
-                    // Prevent the browser from of navigating to the previous page
-                    if (!defaults.editable) {
-                        return false;
-                    }
+                if (this.value.length === 0) {
+                    $(this).trigger('autotab-previous', defaults);
+                    return;
                 }
-                else {
-                    setSettings(this, { changed: (this.value != defaults.originalValue) });
-                }
+
+                setSettings(this, { changed: (this.value !== defaults.originalValue) });
             }
             else if (keyCode == 9 && settings.focusChange !== null) {
                 // Tab backwards
