@@ -1,3 +1,19 @@
+## 1.8.0 (2014-10-28)
+
+Features:
+
+* added refresh global method
+* updated demo to support removing examples in order to showcase the new refresh feature
+* added support for readonly fields
+* added support for specifying the filter format through class names based on the value of `$.autotab.selectFilterByClass`
+* added demos for Knockout and Angular
+
+Bug fixes:
+
+* fixes several issues with handling a pasted value that contained capital letters (#41, #65)
+* fixes an issue that caused disabled/readonly fields to be altered when pasting
+
+
 ## 1.7.1 (2014-08-21)
 
 Bug fixes:

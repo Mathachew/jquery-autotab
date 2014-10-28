@@ -4,6 +4,7 @@
     <head>
         <title>jQuery Autotab Demo</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link href="css/screen.css" rel="stylesheet">
         <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="js/jquery.autotab.js"></script>
         <script>
@@ -51,78 +52,13 @@
                 $.autotab.restore();
                 $('#autotab-status span').removeClass('off').addClass('on').text('On');
             });
+
+            $('.remove-example').on('click', function () {
+                $(this).parent().remove();
+                $.autotab.refresh();
+            });
         });
         </script>
-
-        <style>
-        body {
-            background-color: #f7f7f9;
-            color: #333;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 14px;
-            line-height: 20px;
-        }
-        hr {
-            border: 0;
-            border-top: 1px solid #eee;
-            border-bottom: 1px solid #fff;
-        }
-        #container {
-            background-color: #fff;
-            border: 1px solid #e1e1e8;
-            border-radius: 10px;
-            box-sizing: border-box;
-            margin: auto;
-            padding: 20px;
-            width: 800px;
-        }
-        pre,
-        code {
-            background-color: #f7f7f9;
-            border: 1px solid #e1e1e8;
-            border-radius: 5px;
-            padding: 2px 4px;
-            word-wrap: break-word;
-        }
-        code {
-            display: inline-block;
-        }
-        .example {
-        }
-        .example label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        button {
-            background-color: #f3f3f3;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            color: #333;
-            cursor: pointer;
-            display: inline-block;
-            font-size: 14px;
-            margin: 10px 0;
-            /*outline: none;*/
-            padding: 6px 12px;
-            position: relative;
-            text-align: center;
-            vertical-align: middle;
-            white-space: nowrap;
-        }
-        button:hover {
-            background-color: #eee;
-        }
-        button:active {
-            top: 1px;
-        }
-        .on {
-            color: green;
-        }
-        .off {
-            color: red;
-        }
-        </style>
     </head>
 
     <body>
@@ -144,10 +80,12 @@
                 <span id="autotab-status">Autotab status: <span class="on">On</span></span>
             </div>
 
-            <hr>
+            <div class="example">
+                <div class="remove-example">
+                    <a href="javascript:;" title="Remove example">X</a>
+                </div>
 
-            <div>
-                <div class="example">
+                <div>
                     <label for="number1">Phone Number</label>
 
                     <input type="text" id="number1" class="number" maxlength="3" size="3">
@@ -161,10 +99,12 @@ $('.number').autotab('filter', 'number');
 </pre>
             </div>
 
-            <hr>
+            <div class="example">
+                <div class="remove-example">
+                    <a href="javascript:;" title="Remove example">X</a>
+                </div>
 
-            <div>
-                <div class="example">
+                <div>
                     <label for="text1">Text characters only</label>
 
                     <input type="text" id="text1" class="text" maxlength="5" size="4">
@@ -178,10 +118,12 @@ $('.text').autotab('filter', 'text');
 </pre>
             </div>
 
-            <hr>
+            <div class="example">
+                <div class="remove-example">
+                    <a href="javascript:;" title="Remove example">X</a>
+                </div>
 
-            <div>
-                <div class="example">
+                <div>
                     <label for="alpha1">Alpha only</label>
 
                     <input type="text" id="alpha1" class="alpha" maxlength="5" size="4">
@@ -199,10 +141,12 @@ $('.alpha').autotab('filter', 'alpha');
 </pre>
             </div>
 
-            <hr>
+            <div class="example">
+                <div class="remove-example">
+                    <a href="javascript:;" title="Remove example">X</a>
+                </div>
 
-            <div>
-                <div class="example">
+                <div>
                     <label for="alphanumeric1">Uppercase letters and numbers</label>
 
                     <input type="text" id="alphanumeric1" class="alphanumeric" maxlength="5" size="4">
@@ -220,10 +164,12 @@ $('.alphanumeric').autotab('filter', { format: 'alphanumeric', uppercase: true }
 </pre>
             </div>
 
-            <hr>
+            <div class="example">
+                <div class="remove-example">
+                    <a href="javascript:;" title="Remove example">X</a>
+                </div>
 
-            <div>
-                <div class="example">
+                <div>
                     <label for="regex">Regular Expression (Allows numbers and periods)</label>
                     <input type="text" id="regex" maxlength="15" size="13">
                 </div>
@@ -232,11 +178,13 @@ $('#regex').autotab({ format: 'custom', pattern: '[^0-9\.]' });
 </pre>
             </div>
 
-            <hr>
+            <div class="example">
+                <div class="remove-example">
+                    <a href="javascript:;" title="Remove example">X</a>
+                </div>
 
-            <div>
-                <div class="example">
-                    <label for="function">Custom Function that forces a number range of 1 to 12</label>
+                <div>
+                    <label for="function">Custom function that forces a number range of 1 to 12</label>
                     <input type="text" id="function" maxlength="2" size="3">
                 </div>
                 <pre>
@@ -267,10 +215,12 @@ $('#function').autotab(function (value, element) {
 </pre>
             </div>
 
-            <hr>
+            <div class="example">
+                <div class="remove-example">
+                    <a href="javascript:;" title="Remove example">X</a>
+                </div>
 
-            <div>
-                <div class="example">
+                <div>
                     <label for="regex">Hexadecimal (Allows numbers, a-f, and A-F)</label>
 
                     <input type="text" id="hexadecimal1" class="hexadecimal" maxlength="4" size="3">
@@ -294,10 +244,12 @@ $('.hexadecimal').autotab('filter', 'hexadecimal');
 </pre>
             </div>
 
-            <hr>
+            <div class="example">
+                <div class="remove-example">
+                    <a href="javascript:;" title="Remove example">X</a>
+                </div>
 
-            <div>
-                <div class="example">
+                <div>
                     <label for="ip1">Numbers only with support for auto tabbing on periods</label>
 
                     <input type="text" id="ip1" class="ip" maxlength="3" size="4">
@@ -313,10 +265,12 @@ $('.ip').autotab('filter', { format: 'number', trigger: '.' });
 </pre>
             </div>
 
-            <hr>
+            <div class="example">
+                <div class="remove-example">
+                    <a href="javascript:;" title="Remove example">X</a>
+                </div>
 
-            <div>
-                <div class="example">
+                <div>
                     <label for="pin1">Filtering and auto tabbing on password fields</label>
 
                     <input type="password" id="pin1" class="pin" maxlength="3" size="4">
@@ -328,17 +282,19 @@ $('.pin').autotab('filter', 'number');
 </pre>
             </div>
 
-            <hr>
+            <div class="example">
+                <div class="remove-example">
+                    <a href="javascript:;" title="Remove example">X</a>
+                </div>
 
-            <div>
-                <div class="example">
+                <div>
                     <label for="all1">Any and all characters with tabbing support on non-text form fields. Textarea will auto tab when the defined <code>maxlength</code> is reached, disabled fields are skipped entirely, and the select list will auto tab when a value is selected. Auto tabbing on select lists only applies for single select and is configurable using <code>tabOnSelect</code>.</label>
 
                     <input type="text" id="all1" class="all" maxlength="5" size="4">
                     <input type="text" id="all2" class="all" maxlength="3" size="1" disabled="disabled" value="zxy">
                     <input type="text" id="all3" class="all" maxlength="5" size="4">
                     <br>
-                    <button value="button">Standard Button</button> <input type="submit" value="Submit Button"> <button value="button" disabled="disabled">Disabled Button</button> 
+                    <button value="button">Standard Button</button> <input type="submit" value="Submit Button"> <button value="button" disabled="disabled">Disabled Button</button> <input type="button" value="Input Button">
                     <br>
                     <select>
                         <option>First</option>
@@ -353,6 +309,14 @@ $('.pin').autotab('filter', 'number');
                     <textarea cols="20" rows="2" maxlength="10" class="all"></textarea>
                     <br>
                     <input type="text" id="all4" class="all" maxlength="5" size="4">
+                    <br>
+                    Email: <input type="email" id="all5">
+                    <br>
+                    Number: <input type="number" id="all6">
+                    <br>
+                    Range: <input type="range" id="all7">
+                    <br>
+                    URL: <input type="url" id="all8">
                 </div>
                 <pre>
 // Note: This call is not necessary as 'all' is the default format

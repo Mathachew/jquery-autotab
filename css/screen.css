@@ -1,0 +1,86 @@
+body {
+    background-color: #f7f7f9;
+    color: #333;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+}
+hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #fff;
+}
+#container {
+    background-color: #fff;
+    border: 1px solid #e1e1e8;
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin: auto;
+    padding: 20px;
+    width: 800px;
+}
+pre,
+code {
+    background-color: #f7f7f9;
+    border: 1px solid #e1e1e8;
+    border-radius: 5px;
+    padding: 2px 4px;
+    word-wrap: break-word;
+}
+code {
+    display: inline-block;
+}
+.example {
+    border-top: 1px solid #eee;
+    padding-top: 5px;
+}
+.example label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+button {
+    background-color: #f3f3f3;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    margin: 10px 0;
+    /*outline: none;*/
+    padding: 6px 12px;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+button:hover {
+    background-color: #eee;
+}
+button:active {
+    top: 1px;
+}
+.on {
+    color: green;
+}
+.off {
+    color: red;
+}
+.remove-example {
+    float: right;
+    margin-top: 5px;
+}
+.remove a,
+.remove-example a {
+    background-color: #f7f7f9;
+    border: 1px solid #e1e1e8;
+    border-radius: 5px;
+    color: #333;
+    padding: 2px 6px;
+    text-decoration: none;
+}
+.remove a:hover,
+.remove-example a:hover {
+    background-color: #e7e7e9;
+}

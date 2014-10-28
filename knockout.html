@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>jQuery Autotab Demo with Knockout</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link href="css/screen.css" rel="stylesheet">
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="js/jquery.autotab.js"></script>
+        <script src="http://knockoutjs.com/downloads/knockout-3.2.0.js"></script>
+        <script>
+        $.autotab.selectFilterByClass = true;
+
+        function PhoneNumberViewModel() {
+            var self = this;
+
+            self.areaCode = ko.observable();
+            self.number1 = ko.observable();
+            self.number2 = ko.observable();
+        }
+
+        function ProductKeyViewModel() {
+            var self = this;
+
+            self.set1 = ko.observable('JQATB');
+            self.set2 = ko.observable();
+            self.set3 = ko.observable();
+            self.set4 = ko.observable();
+            self.set5 = ko.observable();
+        }
+
+        function AutotabViewModel() {
+            var self = this;
+
+            self.phones = ko.observableArray();
+            self.productKeys = ko.observableArray();
+
+            self.addPhone = function () {
+                self.phones.push(new PhoneNumberViewModel());
+
+                setTimeout(function () {
+                    $.autotab.refresh();
+                }, 1);
+            };
+
+            self.removePhone = function (viewModel, event) {
+                if (self.phones().length <= 1) {
+                    return;
+                }
+
+                self.phones.remove(viewModel);
+
+                setTimeout(function () {
+                    $.autotab.refresh();
+                }, 1);
+            };
+
+            self.addProductKey = function () {
+                self.productKeys.push(new ProductKeyViewModel());
+
+                setTimeout(function () {
+                    var lastField = (self.productKeys().length * 5);
+
+                    for (var i = 0; i < 5; i++) {
+                        $('#alphanumeric' + (lastField - i)).autotab('filter', { uppercase: true });
+                    }
+
+                    $.autotab.refresh();
+                }, 1);
+            };
+
+            self.removeProductKey = function (viewModel, event) {
+                if (self.productKeys().length <= 1) {
+                    return;
+                }
+
+                self.productKeys.remove(viewModel);
+
+                setTimeout(function () {
+                    $.autotab.refresh();
+                }, 1);
+            };
+
+            self.addPhone();
+            self.addProductKey();
+        }
+
+        var vm;
+
+        $(function () {
+            vm = new AutotabViewModel();
+            ko.applyBindings(vm);
+        });
+        </script>
+    </head>
+
+    <body>
+        <div id="container">
+            <h1>jQuery Autotab Demo with Knockout</h1>
+            <p>Autotab's full documentation can be found in <a href="https://github.com/Mathachew/jquery-autotab/blob/master/README.md">ReadMe.md</a> on GitHub.</p>
+
+            <p>The purpose of this demo is to provide a proof of concept for dynamically adding or removing fields that are handled through Autotab. <a href="./angular.html">Click here</a> to see this using Angular.</p>
+
+            <div>
+                <button data-bind="click: addPhone">Add Number</button>
+                <button data-bind="click: addProductKey">Add Product Key</button>
+            </div>
+
+            <div class="example">
+                <label>Phone Numbers</label>
+
+                <div data-bind="foreach: phones">
+                    <div>
+                        <input type="text" class="number" maxlength="3" size="3" data-bind="value: areaCode, attr: { id: 'number' + (($index() * 3) + 1) }">
+                        -
+                        <input type="text" class="number" maxlength="3" size="3" data-bind="value: number1, attr: { id: 'number' + (($index() * 3) + 2) }">
+                        -
+                        <input type="text" class="number" maxlength="4" size="5" data-bind="value: number2, attr: { id: 'number' + (($index() * 3) + 3) }">
+
+                        <span class="remove" data-bind="visible: $parent.phones().length > 1">
+                            <a href="javascript:;" data-bind="click: $parent.removePhone">X</a>
+                        </span>
+                    </div>
+                    <br>
+                </div>
+            </div>
+
+            <div class="example">
+                <label>Product Keys</label>
+
+                <div data-bind="foreach: productKeys">
+                    <div>
+                        <input type="text" class="alphanumeric" maxlength="5" size="4" disabled="disabled" data-bind="value: set1, attr: { id: 'productKey' + (($index() * 5) + 1) }">
+                        -
+                        <input type="text" class="alphanumeric" maxlength="5" size="4" data-bind="value: set2, attr: { id: 'productKey' + (($index() * 5) + 2) }">
+                        -
+                        <input type="text" class="alphanumeric" maxlength="5" size="4" data-bind="value: set3, attr: { id: 'productKey' + (($index() * 5) + 3) }">
+                        -
+                        <input type="text" class="alphanumeric" maxlength="5" size="4" data-bind="value: set4, attr: { id: 'productKey' + (($index() * 5) + 4) }">
+                        -
+                        <input type="text" class="alphanumeric" maxlength="5" size="4" data-bind="value: set5, attr: { id: 'productKey' + (($index() * 5) + 5) }">
+
+                        <span class="remove" data-bind="visible: $parent.productKeys().length > 1">
+                            <a href="javascript:;" data-bind="click: $parent.removeProductKey">X</a>
+                        </span>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            (function (p) {
+                if (p.indexOf('file:') == 0) {
+                    return;
+                }
+
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+                ga('create', 'UA-16922340-11', 'auto');
+                ga('send', 'pageview');
+            })(window.location.protocol);
+        </script>
+    </body>
+</html>

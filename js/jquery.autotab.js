@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.7.1
+ * Autotab - jQuery plugin 1.8.0
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2008, 2014 Matthew Miller
@@ -46,6 +46,19 @@
             tabOnSelect: false
         };
 
+        // If $.autotab.selectFilterByClas is true and the format not specified, automatically select an element's format based on a matching class name.
+        // The first matched element becomes the selected format for the filter.
+        if ($.autotab.selectFilterByClass === true && typeof $(e).data('autotab-format') === 'undefined') {
+            var classes = ['all', 'text', 'alpha', 'number', 'numeric', 'alphanumeric', 'hex', 'hexadecimal', 'custom'];
+
+            for (var key in classes) {
+                if ($(e).hasClass(classes[key])) {
+                    settings.format = classes[key];
+                    break;
+                }
+            }
+        }
+
         for (var key in settings) {
             if (typeof $(e).data('autotab-' + key) !== 'undefined') {
                 settings[key] = $(e).data('autotab-' + key);
@@ -76,6 +89,8 @@
         $(':input').autotab(options);
     };
 
+    $.autotab.selectFilterByClass = false;
+
     $.autotab.next = function () {
         var e = $(document.activeElement);
 
@@ -98,6 +113,10 @@
 
     $.autotab.restore = function (e) {
         queryObject(e) ? $(e).autotab('restore') : $(':input').autotab('restore');
+    };
+
+    $.autotab.refresh = function (e) {
+        queryObject(e) ? $(e).autotab('refresh') : $(':input').autotab('refresh');
     };
 
     $.fn.autotab = function (method, options) {
@@ -153,6 +172,61 @@
                 defaults.disabled = false;
 
                 setSettings(filtered[i], defaults);
+            }
+        }
+        // Refresh target/previous elements
+        else if (method == 'refresh') {
+            for (var i = 0, length = filtered.length; i < length; i++) {
+                var defaults = getSettings(filtered[i]),
+                    n = i + 1,
+                    p = i - 1;
+
+                // No selector was specified, so automatically set the target
+                if (defaults.target === null || typeof defaults.target === 'undefined' || defaults.target.selector === '') {
+                    if (i > 0 && n < length) {
+                        defaults.target = filtered[n];
+                    }
+                    else if (i > 0) {
+                        defaults.target = null;
+                    }
+                    else {
+                        defaults.target = filtered[n];
+                    }
+                }
+                else {
+                    console.log('target selector!');
+                }
+
+                // No selector was specified, so automatically set the previous
+                if (defaults.previous === null || typeof defaults.previous === 'undefined' || defaults.previous.selector === '') {
+                    if (i > 0 && n < length) {
+                        defaults.previous = filtered[p];
+                    }
+                    else if (i > 0) {
+                        defaults.previous = filtered[p];
+                    }
+                    else {
+                        defaults.previous = null;
+                    }
+                }
+                else {
+                    console.log('previous selector!');
+                }
+
+                if (!defaults.loaded) {
+                    autotabBind(filtered[i], defaults);
+                }
+                else {
+                    if (queryObject(defaults.target)) {
+                        defaults.target = $(defaults.target);
+                    }
+
+                    if (queryObject(defaults.previous)) {
+                        defaults.previous = $(defaults.previous);
+                    }
+
+                    setSettings(filtered[i], defaults);
+                }
             }
         }
         else {
@@ -331,8 +405,8 @@
                     // Using focus on iOS devices is a pain, so use the browser's next/previous buttons to proceed
                     if (!settings.iOS) {
 
-                        // Field is disabled, so tab to next element
-                        if (target.prop('disabled')) {
+                        // Field is disabled/readonly, so tab to next element
+                        if (target.prop('disabled') || target.prop('readonly')) {
                             target.trigger('autotab-next');
                         }
                         else {
@@ -355,8 +429,8 @@
                 if (!defaults.disabled && previous.length) {
                     var value = previous.val();
 
-                    // Field is disabled, so tab to previous element
-                    if (previous.prop('disabled')) {
+                    // Field is disabled/readonly, so tab to previous element
+                    if (previous.prop('disabled') || previous.prop('readonly')) {
                         previous.trigger('autotab-previous');
                     }
                     else if (value.length && previous.data('autotab-editable')) {
@@ -391,17 +465,18 @@
             // Go to the previous element when backspace
             // is pressed in an empty input field
             if (keyCode == 8) {
-                if (!defaults.editable || this.value.length === 0) {
+                // Prevent the browser from of navigating to the previous page
+                if (this.type === 'select-one' || this.type === 'checkbox' || this.type === 'radio' || this.type === 'button' || this.type === 'submit' || this.type === 'range') {
                     $(this).trigger('autotab-previous', defaults);
+                    return false;
+                }
 
-                    // Prevent the browser from of navigating to the previous page
-                    if (!defaults.editable) {
-                        return false;
-                    }
+                if (this.value.length === 0) {
+                    $(this).trigger('autotab-previous', defaults);
+                    return;
                 }
-                else {
-                    setSettings(this, { changed: (this.value != defaults.originalValue) });
-                }
+
+                setSettings(this, { changed: (this.value !== defaults.originalValue) });
             }
             else if (keyCode == 9 && settings.focusChange !== null) {
                 // Tab backwards
@@ -525,6 +600,7 @@
                         hiddenInput = document.createElement('input');
                     hiddenInput.type = 'hidden';
                     hiddenInput.value = e.value.toLowerCase();
+                    hiddenInput.originalValue = e.value;
 
                     e.maxLength = originDefaults.maxlength;
                     e.value = filterValue(e, e.value, originDefaults).substr(0, originDefaults.maxlength);
@@ -534,12 +610,22 @@
                             return;
                         }
 
-                        for (var i = 0, count = previousValue.length; i < count; i++) {
-                            lastIndex = hiddenInput.value.indexOf(previousValue.charAt(i), lastIndex) + 1;
+                        var defaults = getSettings(e);
+
+                        if ($(e).prop('disabled') || $(e).prop('readonly')) {
+                            $(e).trigger('autotab-next');
+
+                            if (!settings.iOS) {
+                                handlePaste(defaults.target[0], previousValue);
+                            }
+                            return;
                         }
 
-                        var defaults = getSettings(e),
-                            trimmedValue = hiddenInput.value.substr(lastIndex),
+                        for (var i = 0, count = previousValue.length; i < count; i++) {
+                            lastIndex = hiddenInput.value.indexOf(previousValue.charAt(i).toLowerCase(), lastIndex) + 1;
+                        }
+
+                        var trimmedValue = hiddenInput.originalValue.substr(lastIndex),
                             filteredValue = filterValue(e, trimmedValue, defaults).substr(0, defaults.maxlength);
 
                         if (!filteredValue) {
