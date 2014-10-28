@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>jQuery Autotab Demo with Angular</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link href="css/screen.css" rel="stylesheet">
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="js/jquery.autotab.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0/angular.min.js"></script>
+        <script>
+        $.autotab.selectFilterByClass = true;
+        var autotabApp = angular.module('AutotabApp', []);
+
+        autotabApp.controller('AutotabController', ['$scope', function ($scope) {
+            var newPhone = { id: '', areaCode: '', number1: '', number2: ''},
+                newProductKey = { id: '', set1: 'JQATB', set2: '', set3: '', set4: '', set4: '', set5: '' };
+
+            $scope.phones = [];
+            $scope.productKeys = [];
+
+            $scope.addPhone = function () {
+                $scope.phones.push({ areaCode: '', number1: '', number2: ''});
+
+                setTimeout(function () {
+                    $.autotab.refresh();
+                }, 1);
+            };
+
+            $scope.removePhone = function (index) {
+                if ($scope.phones.length <= 1) {
+                    return;
+                }
+
+                $scope.phones.splice(index, 1);
+
+                setTimeout(function () {
+                    $.autotab.refresh();
+                }, 1);
+            };
+
+            $scope.addProductKey = function () {
+                $scope.productKeys.push({ set1: 'JQATB', set2: '', set3: '', set4: '', set4: '', set5: '' });
+
+                setTimeout(function () {
+                    var lastField = ($scope.productKeys.length * 5);
+
+                    for (var i = 0; i < 5; i++) {
+                        $('#alphanumeric' + (lastField - i)).autotab('filter', { uppercase: true });
+                    }
+
+                    $.autotab.refresh();
+                }, 1);
+            };
+
+            $scope.removeProductKey = function (index) {
+                if ($scope.productKeys.length <= 1) {
+                    return;
+                }
+
+                $scope.productKeys.splice(index, 1);
+
+                setTimeout(function () {
+                    $.autotab.refresh();
+                }, 1);
+            };
+
+            $scope.addPhone();
+            $scope.addProductKey();
+        }]);
+        </script>
+    </head>
+
+    <body ng-app="AutotabApp">
+        <div id="container" ng-controller="AutotabController">
+            <h1>jQuery Autotab Demo with Angular</h1>
+            <p>Autotab's full documentation can be found in <a href="https://github.com/Mathachew/jquery-autotab/blob/master/README.md">ReadMe.md</a> on GitHub.</p>
+
+            <p>The purpose of this demo is to provide a proof of concept for dynamically adding or removing fields that are handled through Autotab. <a href="./knockout.html">Click here</a> to see this using Knockout.</p>
+
+            <div>
+                <button ng-click="addPhone()">Add Number</button>
+                <button ng-click="addProductKey()">Add Product Key</button>
+            </div>
+
+            <div class="example">
+                <label>Phone Numbers</label>
+
+                <div ng-repeat="phone in phones track by $index">
+                    <div>
+                        <input type="text" id="number{{ ($index * 3) + 1 }}" ng-model="phone.areaCode" class="number" maxlength="3" size="3">
+                        -
+                        <input type="text" id="number{{ ($index * 3) + 2 }}" ng-model="phone.number1" class="number" maxlength="3" size="3">
+                        -
+                        <input type="text" id="number{{ ($index * 3) + 3 }}" ng-model="phone.number2" class="number" maxlength="4" size="5">
+
+                        <span class="remove" ng-hide="phones.length == 1" ng-show="phones.length > 1">
+                            <a href="javascript:;" ng-click="removePhone($index)">X</a>
+                        </span>
+                    </div>
+                    <br>
+                </div>
+            </div>
+
+             <div class="example">
+                <label>Product Keys</label>
+
+                <div ng-repeat="productKey in productKeys track by $index">
+                    <div>
+                        <input type="text" id="productKey{{ ($index * 5) + 1 }}" ng-model="productKey.set1" class="alphanumeric" maxlength="5" size="4" disabled="disabled">
+                        -
+                        <input type="text" id="productKey{{ ($index * 5) + 2 }}" ng-model="productKey.set2" class="alphanumeric" maxlength="5" size="4">
+                        -
+                        <input type="text" id="productKey{{ ($index * 5) + 3 }}" ng-model="productKey.set3" class="alphanumeric" maxlength="5" size="4">
+                        -
+                        <input type="text" id="productKey{{ ($index * 5) + 4 }}" ng-model="productKey.set4" class="alphanumeric" maxlength="5" size="4">
+                        -
+                        <input type="text" id="productKey{{ ($index * 5) + 5 }}" ng-model="productKey.set5" class="alphanumeric" maxlength="5" size="4">
+
+                        <span class="remove" ng-hide="productKeys.length == 1" ng-show="productKeys.length > 1">
+                            <a href="javascript:;" ng-click="removeProductKey($index)">X</a>
+                        </span>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            (function (p) {
+                if (p.indexOf('file:') == 0) {
+                    return;
+                }
+
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+                ga('create', 'UA-16922340-11', 'auto');
+                ga('send', 'pageview');
+            })(window.location.protocol);
+        </script>
+    </body>
+</html>

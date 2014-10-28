@@ -257,7 +257,7 @@ $('.ipv6').autotab('filter', 'hexadecimal');
 
 Autotab comes with several global methods, which are probably most useful in edge cases.
 
-<table width="100%">
+<table width="100%" style="display: table;">
   <tr>
     <td width="30%" valign="top">$.autotab()</td>
     <td>Initializes Autotab on all elements matching the <code>:input</code> selector.</td>
@@ -268,7 +268,7 @@ Autotab comes with several global methods, which are probably most useful in edg
     </td>
   </tr>
 </table>
-<table width="100%">
+<table width="100%" style="display: table;">
   <tr>
     <td width="30%" valign="top">$.autotab.next()</td>
     <td>
@@ -286,32 +286,46 @@ Autotab comes with several global methods, which are probably most useful in edg
     </td>
   </tr>
 </table>
-<table width="100%">
+<table width="100%" style="display: table;">
   <tr>
     <td width="30%" valign="top">$.autotab.remove()</td>
     <td>Removes Autotab from all matched elements.</td>
   </tr>
   <tr>
     <td valign="top">$.autotab.remove(string)</td>
-    <td><strong>string</strong>: A selector identifying the matched element.</td>
+    <td><strong>string</strong>: A selector identifying the matched element(s).</td>
   </tr>
   <tr>
     <td valign="top">$.autotab.remove(object)</td>
     <td><strong>object</strong>: Applies the removal to all matched elements.</td>
   </tr>
 </table>
-<table width="100%">
+<table width="100%" style="display: table;">
   <tr>
     <td width="30%" valign="top">$.autotab.restore()</td>
     <td>Restores Autotab to all matched elements.</td>
   </tr>
   <tr>
     <td valign="top">$.autotab.restore(string)</td>
-    <td><strong>string</strong>: A selector identifying the matched element.</td>
+    <td><strong>string</strong>: A selector identifying the matched element(s).</td>
   </tr>
   <tr>
     <td valign="top">$.autotab.restore(object)</td>
     <td><strong>object</strong>: Applies restoration to all matched elements.</td>
+  </tr>
+</table>
+<table width="100%" style="display: table;">
+  <tr>
+    <td width="30%" valign="top">$.autotab.refresh()</td>
+    <td>Refreshes the tabbing order on all elements matching the <code>:input</code> selector.</td>
+  </tr>
+  <tr>
+    <td valign="top">$.autotab.refresh(string)</td>
+    <td><strong>string</strong>: A selector identifying the matched element(s)</td>
+  </tr>
+  <tr>
+    <td valign="top">$.autotab.refresh(object)</td>
+    <td><strong>object</strong>: Refreshes the target/previous values for all matched elements.</td>
   </tr>
 </table>
 
