@@ -16,6 +16,7 @@ Autotab is a jQuery plugin that provides auto tabbing and filtering on text fiel
 
 Always running the latest and greatest version of Autotab: http://autotab.mathachew.com/
 
+[Angular](http://autotab.mathachew.com/angular.html) and [Knockout](http://autotab.mathachew.com/knockout.html) demos are also available.
 
 ## Table of Contents
 * [Requirements](#requirements)
