@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.8.0
+ * Autotab - jQuery plugin 1.8.1
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2008, 2014 Matthew Miller
@@ -179,38 +179,52 @@
             for (var i = 0, length = filtered.length; i < length; i++) {
                 var defaults = getSettings(filtered[i]),
                     n = i + 1,
-                    p = i - 1;
+                    p = i - 1,
+                    selectTarget = function () {
+                        if (i > 0 && n < length) {
+                            defaults.target = filtered[n];
+                        }
+                        else if (i > 0) {
+                            defaults.target = null;
+                        }
+                        else {
+                            defaults.target = filtered[n];
+                        }   
+                    },
+                    selectPrevious = function () {
+                        if (i > 0 && n < length) {
+                            defaults.previous = filtered[p];
+                        }
+                        else if (i > 0) {
+                            defaults.previous = filtered[p];
+                        }
+                        else {
+                            defaults.previous = null;
+                        }
+                    };
 
-                // No selector was specified, so automatically set the target
-                if (defaults.target === null || typeof defaults.target === 'undefined' || defaults.target.selector === '') {
-                    if (i > 0 && n < length) {
-                        defaults.target = filtered[n];
-                    }
-                    else if (i > 0) {
-                        defaults.target = null;
-                    }
-                    else {
-                        defaults.target = filtered[n];
-                    }
+                // Nothing was specified for the target element, so automatically set it
+                if (defaults.target === null || defaults.target.selector === '') {
+                    selectTarget();
                 }
-                else {
-                    console.log('target selector!');
+                else if (typeof defaults.target === 'string' || defaults.target.selector) {
+                    defaults.target = $(typeof defaults.target === 'string' ? defaults.target : defaults.target.selector);
+
+                    if (defaults.target.length === 0) {
+                        selectTarget();
+                    }
                 }
 
-                // No selector was specified, so automatically set the previous
-                if (defaults.previous === null || typeof defaults.previous === 'undefined' || defaults.previous.selector === '') {
-                    if (i > 0 && n < length) {
-                        defaults.previous = filtered[p];
-                    }
-                    else if (i > 0) {
-                        defaults.previous = filtered[p];
-                    }
-                    else {
-                        defaults.previous = null;
-                    }
+                // Nothing was specified for the previous element, so automatically set it
+                if (defaults.previous === null || defaults.previous.selector === '') {
+                    selectPrevious();
                 }
-                else {
-                    console.log('previous selector!');
+                else if (typeof defaults.previous === 'string' || defaults.previous.selector) {
+                    defaults.previous = $(typeof defaults.previous === 'string' ? defaults.previous : defaults.previous.selector);
+
+                    if (defaults.previous.length === 0) {
+                        selectPrevious();
+                    }
                 }
 
                 if (!defaults.loaded) {

@@ -198,6 +198,8 @@ __Note:__ If passing an object, the target and previous fields are ignored, if i
 
 Because of how Autotab's settings are stored, it is possible to define the filter format using `data-autotab-format`. If using `custom`, place your regular expression in `data-autotab-pattern`.
 
+It is possible to specify the filter through an element's class, using the same names that are available when calling the filter. In order to use this feature, `$.autotab.selectFilterByClass` must be set to true before initializing Autotab.
+
 
 #### Examples
 
@@ -327,6 +329,11 @@ Autotab comes with several global methods, which are probably most useful in edg
   <tr>
     <td valign="top">$.autotab.refresh(object)</td>
     <td><strong>object</strong>: Refreshes the target/previous values for all matched elements.</td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      Under certain conditions, using refresh may cause an unexpected tabbing order, so the <code>:input</code> selector is recommended.
+    </td>
   </tr>
 </table>
 

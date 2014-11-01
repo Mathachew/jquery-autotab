@@ -62,7 +62,7 @@
                     var lastField = (self.productKeys().length * 5);
 
                     for (var i = 0; i < 5; i++) {
-                        $('#alphanumeric' + (lastField - i)).autotab('filter', { uppercase: true });
+                        $('#productKey' + (lastField - i)).autotab('filter', { uppercase: true });
                     }
 
                     $.autotab.refresh();
@@ -100,6 +100,8 @@
             <p>Autotab's full documentation can be found in <a href="https://github.com/Mathachew/jquery-autotab/blob/master/README.md">ReadMe.md</a> on GitHub.</p>
 
             <p>The purpose of this demo is to provide a proof of concept for dynamically adding or removing fields that are handled through Autotab. <a href="./angular.html">Click here</a> to see this using Angular.</p>
+
+            <p><strong>Note:</strong> There is the possibility of having an unexpected tabbing order if you specify the target/previous elements with Knockout, so it is recommended that you use the default <code>:input</code> selector instead.</p>
 
             <div>
                 <button data-bind="click: addPhone">Add Number</button>
