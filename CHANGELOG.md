@@ -1,3 +1,15 @@
+## 1.8.1 (2014-11-01)
+
+Features:
+
+* added support for reusing predefined target/previous selectors for elements
+
+Bug fixes:
+
+* fixed the Angular and Knockout demos by properly applying the uppercase filter requirement on the product key example
+* removed debugging code
+
+
 ## 1.8.0 (2014-10-28)
 
 Features:
