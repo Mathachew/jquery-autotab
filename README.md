@@ -31,6 +31,7 @@ Always running the latest and greatest version of Autotab: http://autotab.mathac
   * [Global Methods](#global-methods)
 * [Options](#options)
 * [Filter Formats](#filter-formats)
+* [Known Issues](#known-issues)
 * [Minify](#minify)
 * [Feedback](#feedback)
 * [Copyright and License](#copyright-and-license)
@@ -488,6 +489,11 @@ Autotab has several filter formats available, all passed into the `format` key. 
     </td>
   </tr>
 </table>
+
+
+## Known Issues
+
+Due to security measures placed in iOS, Autotab cannot achieve auto tabbing functionality when hitting a field's character limit. The problem stems from the `focus` event not being triggered manually. As a workaround, Autotab works with iOS by keeping the keyboard open, allowing you to navigate using the arrow shortcuts.
 
 
 ## Minify
