@@ -1,3 +1,17 @@
+## 1.9.0 (2015-01-13)
+
+Features:
+
+* improved support for other scripts that utilize the key events so as to prevent conflicts from happening
+* added support `drop` events, which are handle just like `paste` events (#73)
+* added support for tabbing through fields using the left and right arrow keys (#74)
+* auto tabbing support added to several input types: tel, number, email, url and search (#75)
+
+Bug fixes:
+
+* fixed a pasting issue that resulted in a target's value being cleared when no additional characters were being pasted (#72)
+* fixed a pasting issue in IE11 where backspacing into a previous element caused the cursor to be placed at the front of the element's value instead of at the end
+
 ## 1.8.1 (2014-11-01)
 
 Features:
