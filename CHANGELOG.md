@@ -10,7 +10,7 @@ Features:
 Bug fixes:
 
 * fixed a pasting issue that resulted in a target's value being cleared when no additional characters were being pasted (#72)
-
+* fixed a pasting issue in IE11 where backspacing into a previous element caused the cursor to be placed at the front of the element's value instead of at the end
 
 ## 1.8.1 (2014-11-01)
 

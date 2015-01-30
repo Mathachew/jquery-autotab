@@ -14,7 +14,8 @@
             tabPause: 800,
             focusChange: null,
             iOS: (platform === 'iPad' || platform === 'iPhone' || platform === 'iPod'),
-            firefox: (typeof InstallTrigger !== 'undefined')
+            firefox: (typeof InstallTrigger !== 'undefined'),
+            ie11: !(window.ActiveXObject) && "ActiveXObject" in window
         };
 
     var setSettings = function (e, settings) {
@@ -428,6 +429,8 @@
             return;
         }
 
+        element.maxLength = 2147483647;
+
         // Add a change event to select lists only so that we can auto tab when a value is selected
         if (element.type == 'select-one') {
             $(element).on('change', function (e) {
@@ -489,7 +492,13 @@
                         previous.trigger('autotab-previous');
                     }
                     else if (value.length && previous.data('autotab-editable') && !defaults.arrowKey) {
-                        previous.focus().val(value.substring(0, value.length - 1));
+                        if (settings.ie11) {
+                            previous.val(value.substring(0, value.length - 1)).focus();
+                        }
+                        else {
+                            previous.focus().val(value.substring(0, value.length - 1));
+                        }
+
                         setSettings(previous, { changed: true });
                     }
                     else {
@@ -497,7 +506,12 @@
                             setSettings(this, { arrowKey: false });
                         }
 
-                        previous.focus();
+                        if (settings.ie11) {
+                            previous.val(value).focus();
+                        }
+                        else {
+                            previous.focus().val(value);
+                        }
                     }
 
                     settings.focusChange = null;
@@ -654,23 +668,22 @@
 
             return false;
         }).on('drop paste', function (e) {
-            var defaults = getSettings(this);
+            var self = this;
 
-            if (!defaults) {
-                return true;
-            }
+            setTimeout(function () {
+                var defaults = getSettings(self);
 
-            this.maxLength = 2147483647;
+                if (!defaults) {
+                    return true;
+                }
 
-            (function (e, originDefaults) {
-                setTimeout(function () {
+                (function (e, originDefaults) {
                     var lastIndex = -1,
                         hiddenInput = document.createElement('input');
                     hiddenInput.type = 'hidden';
                     hiddenInput.value = e.value.toLowerCase();
                     hiddenInput.originalValue = e.value;
 
-                    e.maxLength = originDefaults.maxlength;
                     e.value = filterValue(e, e.value, originDefaults).substr(0, originDefaults.maxlength);
 
                     var handlePaste = function (e, previousValue) {
@@ -706,6 +719,14 @@
                             defaults.arrowKey = false;
                             $(e).trigger('autotab-next', defaults);
 
+                            // Firefox causes all but the first and last elements to retain a select all state, so in order to
+                            // effectively support arrow keys, the starting point of the selection is to the last possible cursor
+                            if (settings.firefox) {
+                                setTimeout(function () {
+                                    e.selectionStart = e.value.length;
+                                }, 1);
+                            }
+
                             if (!settings.iOS) {
                                 handlePaste(defaults.target[0], filteredValue);
                             }
@@ -721,8 +742,8 @@
                             handlePaste(originDefaults.target[0], e.value.toLowerCase());
                         }
                     }
-                }, 1);
-            })(this, defaults);
+                })(self, defaults);
+            }, 1);
         });
     };
 
