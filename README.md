@@ -496,6 +496,7 @@ Autotab has several filter formats available, all passed into the `format` key. 
 * Due to security measures placed in iOS, Autotab cannot achieve auto tabbing functionality when hitting a field's character limit. The problem stems from the `focus` event not being triggered manually. As a workaround, Autotab works with iOS by keeping the keyboard open, allowing you to navigate using the arrow shortcuts.
 * Any script that uses the `keydown` and `keypress` events may conflict with Autotab, or vice versa. As of 1.9.0, Autotab uses event extensions in an attempt to prevent this from happening.
 * With limitations of `selection` in most text field types, only `text`, `password` and `textarea` fields support auto tabbing and filtering, while `tel`, `number`, `email`, `url` and `search` support auto tabbing only.
+* `Drop` events will not work for IE11 since changing the `maxlength` property causes the event from proceeding. IE6-10 work fine, however.
 
 ## Minify
 
