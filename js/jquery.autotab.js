@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.9.0
+ * Autotab - jQuery plugin 1.9.1
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2008, 2015 Matthew Miller
@@ -429,8 +429,6 @@
             return;
         }
 
-        element.maxLength = 2147483647;
-
         // Add a change event to select lists only so that we can auto tab when a value is selected
         if (element.type == 'select-one') {
             $(element).on('change', function (e) {
@@ -668,16 +666,16 @@
 
             return false;
         }).on('drop paste', function (e) {
-            var self = this;
+            var defaults = getSettings(this);
 
-            setTimeout(function () {
-                var defaults = getSettings(self);
+            if (!defaults) {
+                return true;
+            }
 
-                if (!defaults) {
-                    return true;
-                }
+            this.maxLength = 2147483647;
 
-                (function (e, originDefaults) {
+            (function (e, originDefaults) {
+                setTimeout(function () {
                     var lastIndex = -1,
                         hiddenInput = document.createElement('input');
                     hiddenInput.type = 'hidden';
@@ -742,8 +740,8 @@
                             handlePaste(originDefaults.target[0], e.value.toLowerCase());
                         }
                     }
-                })(self, defaults);
-            }, 1);
+                }, 1);
+            })(this, defaults);
         });
     };
 

@@ -1,4 +1,11 @@
-## 1.9.0 (2015-01-13)
+## 1.9.1 (2015-02-04)
+
+Bug fixes:
+
+* reverted a change that caused odd results with an element's maxlength property changed
+
+
+## 1.9.0 (2015-01-31)
 
 Features:
 
@@ -11,6 +18,7 @@ Bug fixes:
 
 * fixed a pasting issue that resulted in a target's value being cleared when no additional characters were being pasted (#72)
 * fixed a pasting issue in IE11 where backspacing into a previous element caused the cursor to be placed at the front of the element's value instead of at the end
+
 
 ## 1.8.1 (2014-11-01)
 
