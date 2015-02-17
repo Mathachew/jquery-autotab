@@ -741,7 +741,7 @@
                         }
                     }
 
-                    e.maxlength = originDefaults.maxlength;
+                    e.maxLength = originDefaults.maxlength;
                 }, 1);
             })(this, defaults);
         });
