@@ -740,6 +740,8 @@
                             handlePaste(originDefaults.target[0], e.value.toLowerCase());
                         }
                     }
+
+                    e.maxLength = originDefaults.maxlength;
                 }, 1);
             })(this, defaults);
         });
