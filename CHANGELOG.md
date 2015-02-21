@@ -1,3 +1,11 @@
+## 1.9.2 (2015-02-20)
+
+Bug fixes:
+
+* fixed an issue with input elements that are a button type having their text being overwritten when pasting and modified the demo to test against the bug (#79)
+* included a pull request that restores an element's original maxlength value
+
+
 ## 1.9.1 (2015-02-04)
 
 Bug fixes:

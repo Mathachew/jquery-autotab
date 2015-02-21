@@ -1,5 +1,5 @@
 /**
- * Autotab - jQuery plugin 1.9.1
+ * Autotab - jQuery plugin 1.9.2
  * https://github.com/Mathachew/jquery-autotab
  * 
  * Copyright (c) 2008, 2015 Matthew Miller
@@ -540,7 +540,7 @@
                 defaults.arrowKey = false;
 
                 // Prevent the browser from of navigating to the previous page
-                if (this.type === 'select-one' || this.type === 'select-multiple' || this.type === 'checkbox' || this.type === 'radio' || this.type === 'button' || this.type === 'submit' || this.type === 'range') {
+                if (!defaults.editable) {
                     $(this).trigger('autotab-previous', defaults);
                     return false;
                 }
@@ -691,7 +691,7 @@
 
                         var defaults = getSettings(e);
 
-                        if ($(e).prop('disabled') || $(e).prop('readonly')) {
+                        if ($(e).prop('disabled') || $(e).prop('readonly') || !defaults.editable) {
                             $(e).trigger('autotab-next');
 
                             if (!settings.iOS) {

@@ -292,11 +292,15 @@ $('.pin').autotab('filter', 'number');
                 <div>
                     <label for="all1">Any and all characters with tabbing support on non-text form fields. Textarea will auto tab when the defined <code>maxlength</code> is reached, disabled fields are skipped entirely, and the select list will auto tab when a value is selected. Auto tabbing on select lists only applies for single select and is configurable using <code>tabOnSelect</code>.</label>
 
-                    <input type="text" id="all1" class="all" maxlength="5" size="4">
-                    <input type="text" id="all2" class="all" maxlength="3" size="1" disabled="disabled" value="zxy">
-                    <input type="text" id="all3" class="all" maxlength="5" size="4">
-                    <br>
-                    <button value="button">Standard Button</button> <input type="submit" value="Submit Button"> <button value="button" disabled="disabled">Disabled Button</button> <input type="button" value="Input Button">
+                    <input type="text" class="all" maxlength="5" size="4">
+                    <button value="button">Standard Button</button>
+                    <input type="text" class="all" maxlength="3" size="1" disabled="disabled" value="zxy">
+                    <input type="text" class="all" maxlength="5" size="4">
+                    <input type="submit" value="Submit Button">
+                    <input type="text" class="all" maxlength="5" size="4">
+                    <button value="button" disabled="disabled">Disabled Button</button>
+                    <input type="text" class="all" maxlength="5" size="4">
+                    <br> <input type="button" value="Input Button">
                     <br>
                     <select>
                         <option>First</option>
@@ -310,17 +314,17 @@ $('.pin').autotab('filter', 'number');
                     <br>
                     <textarea cols="20" rows="2" maxlength="10" class="all"></textarea>
                     <br>
-                    <input type="text" id="all4" class="all" maxlength="5" size="4">
+                    <input type="text" class="all" maxlength="5" size="4">
                     <br>
-                    Email: <input type="email" id="all5">
+                    Email: <input type="email">
                     <br>
-                    Number: <input type="number" id="all6" maxlength="3">
+                    Number: <input type="number" maxlength="3">
                     <br>
-                    Tel: <input type="number" id="all7" maxlength="10">
+                    Tel: <input type="number" maxlength="10">
                     <br>
-                    Range: <input type="range" id="all8">
+                    Range: <input type="range">
                     <br>
-                    URL: <input type="url" id="all9">
+                    URL: <input type="url">
                 </div>
                 <pre>
 // Note: This call is not necessary as 'all' is the default format
